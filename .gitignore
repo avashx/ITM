@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Environment - never commit real keys
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime state
+.ferretdb-state/
+*.sqlite
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Build artifacts
+dist/
+coverage/
+
+# FerretDB telemetry artifact (offline testing)
+state.json

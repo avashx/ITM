@@ -1,0 +1,43 @@
+{
+  "name": "it-monitor",
+  "version": "1.0.0",
+  "description": "IT Monitor - GNCTD e-Services Uptime & Health Monitor with Public Grievance Analytics and Outage-Grievance Correlation Engine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node scripts/seed-demo.js",
+    "seed:endpoints": "node scripts/seed-endpoints.js",
+    "seed:grievances": "node scripts/seed-grievances.js",
+    "verify:endpoints": "node scripts/verify-endpoints.js",
+    "fetch:geodata": "node scripts/fetch-geodata.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "gnctd",
+    "delhi",
+    "uptime-monitor",
+    "grievance-analytics",
+    "civic-tech",
+    "status-page"
+  ],
+  "author": "Aman Vashishth <IT Department, GNCTD (Intern)>",
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^4.4.3",
+    "compression": "^1.7.4",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "helmet": "^8.0.0",
+    "leaflet": "^1.9.4",
+    "leaflet.heat": "^0.2.0",
+    "leaflet.markercluster": "^1.5.3",
+    "mongoose": "^8.6.0",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.14",
+    "socket.io": "^4.8.0"
+  }
+}

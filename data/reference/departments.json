@@ -1,0 +1,255 @@
+{
+  "_comment": "Department & grievance-category taxonomy for GNCTD, modelled on the major PGMS Delhi complaint heads. Keywords drive the keyword-NLP classifier (multi-word phrases score higher than single words). This is a curated reference file - extend freely.",
+  "departments": [
+    {
+      "name": "Delhi Jal Board",
+      "code": "DJB",
+      "categories": [
+        {
+          "name": "Water Supply",
+          "keywords": ["no water", "water supply", "water shortage", "low pressure", "tanker", "water connection", "pipeline leak", "pipeline", "water not coming", "dry tap", "boring"]
+        },
+        {
+          "name": "Water Quality",
+          "keywords": ["dirty water", "contaminated", "smelly water", "muddy water", "water quality", "sewage mixed", "yellow water", "impure water"]
+        },
+        {
+          "name": "Sewerage",
+          "keywords": ["sewer", "sewerage", "sewer overflow", "manhole", "drain blocked", "sewer line", "septic", "drainage overflow"]
+        },
+        {
+          "name": "Water Billing",
+          "keywords": ["water bill", "inflated bill", "meter reading", "water meter", "kno", "bill correction", "djb bill", "billing error water"]
+        }
+      ]
+    },
+    {
+      "name": "Power (DISCOMs)",
+      "code": "POWER",
+      "categories": [
+        {
+          "name": "Power Outage",
+          "keywords": ["power cut", "electricity gone", "no electricity", "power outage", "load shedding", "transformer", "power failure", "blackout", "light gayi", "bijli"]
+        },
+        {
+          "name": "Power Billing",
+          "keywords": ["electricity bill", "inflated electricity", "meter fast", "electric meter", "ca number", "bses bill", "tpddl bill", "power bill", "unit reading"]
+        },
+        {
+          "name": "Power Infrastructure",
+          "keywords": ["hanging wire", "loose wire", "electric pole", "sparking", "naked wire", "electric shock", "cable hanging", "pole tilted"]
+        }
+      ]
+    },
+    {
+      "name": "Municipal Corporation of Delhi",
+      "code": "MCD",
+      "categories": [
+        {
+          "name": "Garbage & Sanitation",
+          "keywords": ["garbage", "kachra", "waste not collected", "dustbin", "dhalao", "sweeping", "sanitation", "garbage dump", "trash", "malba", "debris", "dirty street", "cleaning"]
+        },
+        {
+          "name": "Property Tax",
+          "keywords": ["property tax", "upic", "house tax", "tax receipt", "ptr filing", "property tax portal"]
+        },
+        {
+          "name": "Birth & Death Certificates",
+          "keywords": ["birth certificate", "death certificate", "birth registration", "death registration", "certificate correction mcd"]
+        },
+        {
+          "name": "Stray Animals & Vector Control",
+          "keywords": ["stray dog", "stray cattle", "monkey menace", "mosquito", "fogging", "dengue", "malaria", "vector", "dog bite"]
+        },
+        {
+          "name": "Public Toilets & Parks",
+          "keywords": ["public toilet", "urinal", "park maintenance", "park", "community toilet", "toilet dirty"]
+        },
+        {
+          "name": "Encroachment & Unauthorized Construction",
+          "keywords": ["encroachment", "illegal construction", "unauthorized construction", "footpath occupied", "illegal shop", "rehri", "squatter"]
+        }
+      ]
+    },
+    {
+      "name": "Public Works Department",
+      "code": "PWD",
+      "categories": [
+        {
+          "name": "Roads & Potholes",
+          "keywords": ["pothole", "road broken", "road repair", "bad road", "road construction", "speed breaker", "road caved", "carriageway", "gaddha"]
+        },
+        {
+          "name": "Streetlights",
+          "keywords": ["streetlight", "street light", "dark street", "light not working", "lamp post", "street lamp"]
+        },
+        {
+          "name": "Waterlogging & Drainage",
+          "keywords": ["waterlogging", "water logged", "flooded road", "rain water", "storm drain", "water accumulation", "jal bharav"]
+        },
+        {
+          "name": "Footpaths & Public Infrastructure",
+          "keywords": ["footpath broken", "footpath", "railing", "foot over bridge", "subway dirty", "pavement"]
+        }
+      ]
+    },
+    {
+      "name": "Transport Department",
+      "code": "TPT",
+      "categories": [
+        {
+          "name": "Bus Services (DTC/Cluster)",
+          "keywords": ["dtc bus", "bus frequency", "bus not stopping", "cluster bus", "bus route", "bus stop", "conductor", "bus pass", "bus breakdown", "marshal"]
+        },
+        {
+          "name": "Licences & Registration",
+          "keywords": ["driving licence", "driving license", "learning licence", "rc transfer", "vehicle registration", "fitness certificate", "faceless service", "dl renewal", "sarathi", "vahan"]
+        },
+        {
+          "name": "Permits & Enforcement",
+          "keywords": ["auto refused", "auto fare", "taxi overcharge", "permit", "challan wrong", "overloading", "pollution certificate", "puc"]
+        }
+      ]
+    },
+    {
+      "name": "Revenue Department",
+      "code": "REV",
+      "categories": [
+        {
+          "name": "Certificates (e-District)",
+          "keywords": ["income certificate", "caste certificate", "domicile certificate", "sc st certificate", "obc certificate", "ews certificate", "certificate pending", "certificate rejected", "e-district", "edistrict", "marriage registration", "solvency"]
+        },
+        {
+          "name": "Land Records & Registration",
+          "keywords": ["mutation", "jamabandi", "khasra", "khatauni", "land record", "registry", "sub registrar", "property registration", "doris", "stamp duty", "deed"]
+        },
+        {
+          "name": "Disaster & Relief",
+          "keywords": ["compensation", "relief", "ex gratia", "fire compensation", "flood relief"]
+        }
+      ]
+    },
+    {
+      "name": "Food & Civil Supplies",
+      "code": "F&S",
+      "categories": [
+        {
+          "name": "Ration Card",
+          "keywords": ["ration card", "ration", "nfs application", "food security", "card not made", "member addition", "aadhaar seeding ration", "e-coupon"]
+        },
+        {
+          "name": "Fair Price Shops",
+          "keywords": ["fair price shop", "fps", "ration dealer", "less ration", "ration shop closed", "kerosene", "wheat rice not given"]
+        }
+      ]
+    },
+    {
+      "name": "Health & Family Welfare",
+      "code": "HFW",
+      "categories": [
+        {
+          "name": "Hospitals & Dispensaries",
+          "keywords": ["hospital", "opd", "doctor absent", "medicine not available", "mohalla clinic", "dispensary", "ambulance", "cats ambulance", "lab report", "x-ray", "appointment not available"]
+        },
+        {
+          "name": "Public Health",
+          "keywords": ["epidemic", "vaccination", "immunization", "health camp", "chikungunya", "food safety", "adulteration"]
+        }
+      ]
+    },
+    {
+      "name": "Education (DoE)",
+      "code": "EDU",
+      "categories": [
+        {
+          "name": "School Admissions",
+          "keywords": ["school admission", "ews admission", "nursery admission", "admission denied", "transfer certificate", "edudel"]
+        },
+        {
+          "name": "School Infrastructure & Staff",
+          "keywords": ["school building", "teacher absent", "no teacher", "school toilet", "classroom", "desks", "school fee", "fee hike", "books not received", "uniform"]
+        }
+      ]
+    },
+    {
+      "name": "Delhi Police",
+      "code": "POL",
+      "categories": [
+        {
+          "name": "Safety & Policing",
+          "keywords": ["theft", "chain snatching", "eve teasing", "harassment", "fir not registered", "police not responding", "pcr", "beat officer", "drugs", "gambling", "illegal parking mafia", "noise late night"]
+        },
+        {
+          "name": "Traffic",
+          "keywords": ["traffic jam", "signal not working", "wrong side driving", "traffic police", "congestion", "illegal parking", "red light violation"]
+        }
+      ]
+    },
+    {
+      "name": "Housing & Urban Shelter (DUSIB/DDA)",
+      "code": "HOUS",
+      "categories": [
+        {
+          "name": "Slum & JJ Clusters",
+          "keywords": ["jhuggi", "jj cluster", "slum", "night shelter", "rain basera", "resettlement", "demolition notice"]
+        },
+        {
+          "name": "Housing Allotment & Maintenance",
+          "keywords": ["dda flat", "allotment", "possession delay", "housing scheme", "maintenance flat", "lift not working", "society issue"]
+        }
+      ]
+    },
+    {
+      "name": "Environment & DPCC",
+      "code": "ENV",
+      "categories": [
+        {
+          "name": "Air & Noise Pollution",
+          "keywords": ["air pollution", "smoke", "burning garbage", "industrial pollution", "noise pollution", "loudspeaker", "construction dust", "aqi", "smog"]
+        },
+        {
+          "name": "Trees & Green Cover",
+          "keywords": ["tree cutting", "tree fallen", "pruning", "green belt", "illegal felling", "plantation"]
+        }
+      ]
+    },
+    {
+      "name": "Social Welfare",
+      "code": "SW",
+      "categories": [
+        {
+          "name": "Pensions",
+          "keywords": ["old age pension", "widow pension", "disability pension", "pension not received", "pension stopped", "pension application"]
+        },
+        {
+          "name": "Welfare Schemes",
+          "keywords": ["scholarship", "ladli", "marriage assistance", "disability certificate", "senior citizen", "welfare scheme"]
+        }
+      ]
+    },
+    {
+      "name": "Labour Department",
+      "code": "LAB",
+      "categories": [
+        {
+          "name": "Wages & Employment",
+          "keywords": ["minimum wage", "salary not paid", "wages", "labour card", "construction worker", "bocw", "employer not paying", "termination"]
+        },
+        {
+          "name": "Shops & Establishments",
+          "keywords": ["shop registration", "establishment licence", "labour licence", "shop act"]
+        }
+      ]
+    },
+    {
+      "name": "IT Department (e-Services)",
+      "code": "IT",
+      "categories": [
+        {
+          "name": "Portal & e-Service Issues",
+          "keywords": ["portal not working", "website down", "site not opening", "otp not received", "payment failed", "payment deducted", "online application stuck", "server error", "upload failed", "captcha", "login issue", "digital signature", "e-service", "application status not updating", "session expired"]
+        }
+      ]
+    }
+  ]
+}
