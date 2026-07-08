@@ -3,34 +3,95 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Correlation Engine - IT Monitor</title>
+  <title>Correlation Engine · IT Monitor</title>
+  <script>(function(){try{var t=localStorage.getItem('itm-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var q=new URLSearchParams(location.search).get('theme');if(q==='light'||q==='dark')t=q;document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128994;</text></svg>" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo">IT Monitor</span>
-      <span class="sub">GNCTD Service Health &amp; Grievance Intelligence</span>
-    </div>
-    <nav class="nav">
-      <a href="/">Status</a>
-      <a href="/dashboard.html">Ops Dashboard</a>
-      <a href="/grievances.html">Grievances</a>
-      <a href="/correlation.html">Correlation</a>
-    </nav>
-  </header>
+<div class="app">
 
-  <main class="wrap">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </span>
+      <span class="name">IT Monitor<small>GNCTD · DELHI</small></span>
+    </div>
+
+    <div class="side-label">MENU</div>
+    <nav class="side-nav">
+      <a class="side-link" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Service Status</span>
+      </a>
+      <a class="side-link" href="/dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Ops Dashboard</span>
+      </a>
+      <a class="side-link" href="/grievances.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Grievances</span>
+      </a>
+      <a class="side-link" href="/correlation.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        <span>Correlation</span>
+      </a>
+    </nav>
+
+    <div class="side-label">GENERAL</div>
+    <nav class="side-nav">
+      <a class="side-link" href="https://github.com/avashx/ITM#readme" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span>Documentation</span>
+      </a>
+      <a class="side-link" href="/api/health" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>
+        <span>API Health</span>
+      </a>
+    </nav>
+
+    <div class="side-foot">
+      <div class="side-card">
+        <div class="t"><span class="dot"></span>How it works</div>
+        <div class="d">Complaint volume vs a <span class="v">28-day</span> baseline after each outage · Poisson z-score · surge forecasts for open outages.</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="page-head">
+      <div>
+        <h1>Correlation Engine</h1>
+        <p class="sub">Outage windows overlaid on complaint volume &mdash; with proactive surge forecasts</p>
+      </div>
+      <div class="head-actions">
+        <div class="chip off" id="live-chip"><span class="dot"></span><span class="txt">OFFLINE</span></div>
+        <div class="chip clock"><span id="ist-clock">--:--:--</span></div>
+        <button class="icon-btn" onclick="ITM.toggleTheme()" title="Toggle theme">
+          <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <div class="who"><div class="av">IT</div><div class="wt">IT Department<small>GNCTD · Delhi</small></div></div>
+      </div>
+    </header>
+
     <div id="demo-banner" class="demo-banner"></div>
 
     <section class="card">
-      <h2>Surge predictions (open outages, proactive)</h2>
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Surge predictions <span class="aside">open outages &middot; proactive</span>
+      </h2>
       <div id="predictions"><span class="muted">Loading&hellip;</span></div>
     </section>
 
     <section class="card">
-      <h2>Outage windows vs complaint volume</h2>
-      <div class="filters">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        Outage windows vs complaint volume
+      </h2>
+      <div class="filters" style="box-shadow:none;border:none;background:transparent;padding:0 0 10px">
         <label>Category</label>
         <select id="f-cat"></select>
         <label>Window</label>
@@ -39,21 +100,26 @@
           <option value="60" selected>60 days</option>
           <option value="90">90 days</option>
         </select>
-        <button id="f-apply">Apply</button>
+        <button id="f-apply" class="btn primary">Apply</button>
         <span class="muted small">Shaded bands mark outages of services mapped to this category</span>
       </div>
       <div class="chart-box tall"><canvas id="timeline-chart"></canvas></div>
     </section>
 
     <section class="card">
-      <h2>Detected patterns (outage &rarr; complaint spike)</h2>
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+        Detected patterns <span class="aside">outage &rarr; complaint spike</span>
+      </h2>
       <div id="insights"><span class="muted">Loading&hellip;</span></div>
     </section>
   </main>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/vendor/chartjs/chart.umd.js"></script>
-  <script src="/js/common.js"></script>
-  <script src="/js/correlation.js"></script>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/vendor/chartjs/chart.umd.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/correlation.js"></script>
 </body>
 </html>

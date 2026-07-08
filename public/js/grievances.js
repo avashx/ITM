@@ -1,20 +1,28 @@
 /* Grievance analytics: Leaflet heat/cluster/choropleth layers over real Delhi
- * boundaries, trend + category charts, department SLA scorecard. */
+ * boundaries (theme-aware Carto basemaps), trend chart, resolution gauge,
+ * top categories, department SLA scorecard. */
 /* global L, Chart */
 (function () {
   'use strict';
-  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults } = window.ITM;
-  const tk = chartDefaults(Chart);
+  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange } =
+    window.ITM;
+  let tk = chartDefaults(Chart);
 
-  // Sequential blue ramp (reference palette) for choropleth magnitude
-  const SEQ = ['#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b'];
+  // Sequential green ramp (brand) for choropleth magnitude: light -> deep
+  const SEQ = ['#ddefe5', '#b9e0c8', '#8cc9a6', '#5fae83', '#3d8f64', '#2a6f4c', '#1c4a34'];
+
+  const ARROW =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>';
 
   let map;
+  let lightTiles = null;
+  let darkTiles = null;
   let activeLayer = null;
   let legendCtl = null;
   let boundaryLayer = null;
   let trendChart = null;
   let catChart = null;
+  let gaugeChart = null;
   const geoCache = {};
 
   function params() {
@@ -28,18 +36,41 @@
     return q.toString();
   }
 
+  function currentTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
   async function initMap() {
     map = L.map('map', { zoomSnap: 0.5 }).setView([28.61, 77.12], 10.5);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
+    // Carto light/dark rasters (already whitelisted in the CSP); swapped on
+    // theme change so the map matches the app chrome.
+    lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    });
+    darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    });
+    (currentTheme() === 'dark' ? darkTiles : lightTiles).addTo(map);
+
     // Delhi outline for context (renders even if tiles are unreachable)
     const boundary = await geo('boundary');
     boundaryLayer = L.geoJSON(boundary, {
       style: { color: tk.muted, weight: 1.5, fill: false, dashArray: '4 3' },
     }).addTo(map);
     map.fitBounds(boundaryLayer.getBounds());
+  }
+
+  function swapBasemap(theme) {
+    if (!map || !lightTiles || !darkTiles) return;
+    if (theme === 'dark') {
+      map.removeLayer(lightTiles);
+      darkTiles.addTo(map);
+    } else {
+      map.removeLayer(darkTiles);
+      lightTiles.addTo(map);
+    }
   }
 
   async function geo(layer) {
@@ -74,7 +105,7 @@
       for (const g of rows) {
         const m = L.circleMarker([g.location.lat, g.location.lng], {
           radius: 5, weight: 1.5, color: '#fff',
-          fillColor: g.priority === 'sos' ? tk.critical : tk.series[0], fillOpacity: 0.85,
+          fillColor: g.priority === 'sos' ? tk.critical : tk.primary, fillOpacity: 0.85,
         });
         m.bindPopup(
           `<b>${esc(g.grievanceId)}</b> <span class="pill ${g.status}">${esc(g.status)}</span><br>` +
@@ -104,7 +135,7 @@
           const v = counts[nameOf(f)] || 0;
           return {
             color: tk.surface, weight: 1,
-            fillColor: v ? scale(v) : tk.grid, fillOpacity: 0.75,
+            fillColor: v ? scale(v) : tk.grid, fillOpacity: 0.78,
           };
         },
         onEachFeature: (f, lyr) => {
@@ -131,16 +162,70 @@
     }
   }
 
+  let lastSummary = null;
   async function loadTiles() {
     const s = await api(`/api/grievances/stats/summary?${params()}`);
+    lastSummary = s;
     const open = (s.byStatus.registered || 0) + (s.byStatus.in_progress || 0);
     document.getElementById('tiles').innerHTML = `
-      <div class="tile"><div class="v">${fmt.n(s.total)}</div><div class="l">Grievances (window)</div></div>
-      <div class="tile"><div class="v" style="color:var(--series-1)">${fmt.n(open)}</div><div class="l">Open</div></div>
-      <div class="tile"><div class="v good">${fmt.n(s.byStatus.resolved || 0)}</div><div class="l">Resolved</div></div>
-      <div class="tile"><div class="v critical">${fmt.pct(s.slaBreachRate)}</div><div class="l">Resolution SLA breach</div></div>
-      <div class="tile"><div class="v">${s.avgResolutionHours !== null ? (s.avgResolutionHours / 24).toFixed(1) + 'd' : '-'}</div><div class="l">Avg resolution time</div></div>
-      <div class="tile"><div class="v" style="color:var(--critical)">${fmt.n(s.byPriority.sos || 0)}</div><div class="l">SOS priority</div></div>`;
+      <div class="tile hero">
+        <span class="corner">${ARROW}</span>
+        <div class="l">Grievances in window</div>
+        <div class="v">${fmt.n(s.total)}</div>
+        <div class="delta"><span class="up">&#9650;</span> ${fmt.n(s.byStatus.resolved || 0)} resolved</div>
+      </div>
+      <div class="tile"><div class="l">Open</div><div class="v info">${fmt.n(open)}</div><div class="delta">registered + in progress</div></div>
+      <div class="tile"><div class="l">SLA breach</div><div class="v critical">${fmt.pct(s.slaBreachRate)}</div><div class="delta">resolution &gt; 30 days</div></div>
+      <div class="tile"><div class="l">Avg resolution</div><div class="v">${s.avgResolutionHours !== null ? (s.avgResolutionHours / 24).toFixed(1) : '-'}<span class="unit">days</span></div><div class="delta">median ${s.medianResolutionHours !== null ? (s.medianResolutionHours / 24).toFixed(1) + 'd' : '-'}</div></div>
+      <div class="tile"><div class="l">SOS priority</div><div class="v warn">${fmt.n(s.byPriority.sos || 0)}</div><div class="delta">3-day clock</div></div>`;
+    drawGauge();
+  }
+
+  /** Semi-doughnut: share of grievances resolved / in progress / registered /
+   * rejected in the current window, resolved % in the centre. */
+  function drawGauge() {
+    if (!lastSummary) return;
+    const s = lastSummary;
+    const parts = [
+      { label: 'Resolved', v: s.byStatus.resolved || 0, color: tk.primary },
+      { label: 'In progress', v: s.byStatus.in_progress || 0, color: tk.warning },
+      { label: 'Registered', v: s.byStatus.registered || 0, color: tk.info },
+      { label: 'Rejected', v: s.byStatus.rejected || 0, color: tk.lineStrong },
+    ];
+    const total = parts.reduce((a, p) => a + p.v, 0) || 1;
+    const resolvedPct = Math.round(((s.byStatus.resolved || 0) / total) * 100);
+
+    document.getElementById('gauge-val').textContent = `${resolvedPct}%`;
+    document.getElementById('gauge-legend').innerHTML = parts
+      .map(
+        (p) =>
+          `<span class="li"><span class="sw" style="background:${p.color}"></span>${p.label} <span class="mono muted">${fmt.n(p.v)}</span></span>`
+      )
+      .join('');
+
+    if (gaugeChart) gaugeChart.destroy();
+    gaugeChart = new Chart(document.getElementById('gauge-chart'), {
+      type: 'doughnut',
+      data: {
+        labels: parts.map((p) => p.label),
+        datasets: [
+          {
+            data: parts.map((p) => p.v),
+            backgroundColor: parts.map((p) => p.color),
+            borderColor: tk.surface,
+            borderWidth: 3,
+            borderRadius: 8,
+          },
+        ],
+      },
+      options: {
+        maintainAspectRatio: false,
+        rotation: -90,
+        circumference: 180,
+        cutout: '72%',
+        plugins: { legend: { display: false } },
+      },
+    });
   }
 
   async function loadTrend() {
@@ -187,8 +272,8 @@
           {
             label: 'Complaints',
             data: rows.map((r) => r.count),
-            backgroundColor: tk.series[0],
-            borderRadius: 4,
+            backgroundColor: tk.primary,
+            borderRadius: 6,
             barThickness: 14,
           },
         ],
@@ -215,7 +300,7 @@
           <td class="num">${fmt.n(d.total)}</td>
           <td class="num">${fmt.n(d.open)}</td>
           <td class="num">${fmt.n(d.resolved)}</td>
-          <td class="num" style="font-weight:650;color:${d.slaBreachPct > 20 ? 'var(--critical)' : d.slaBreachPct > 10 ? '#8a6200' : 'var(--good)'}">${fmt.pct(d.slaBreachPct)}</td>
+          <td class="num" style="font-weight:750;color:${d.slaBreachPct > 20 ? 'var(--critical)' : d.slaBreachPct > 10 ? 'var(--warning)' : 'var(--good)'}">${fmt.pct(d.slaBreachPct)}</td>
           <td class="num">${d.avgResolutionDays ?? '-'}</td>
         </tr>`
         )
@@ -236,6 +321,14 @@
   async function refresh() {
     await Promise.all([loadTiles(), loadTrend(), loadCategories(), loadDeptTable(), drawMapLayer()]);
   }
+
+  onThemeChange((theme) => {
+    tk = chartDefaults(Chart);
+    swapBasemap(theme);
+    loadTrend().catch(() => {});
+    loadCategories().catch(() => {});
+    drawGauge();
+  });
 
   navActive();
   demoBanner();

@@ -3,8 +3,9 @@
 /* global Chart */
 (function () {
   'use strict';
-  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults } = window.ITM;
-  const tk = chartDefaults(Chart);
+  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange } =
+    window.ITM;
+  let tk = chartDefaults(Chart);
 
   let timelineChart = null;
 
@@ -70,8 +71,8 @@
           {
             label: `"${category}" complaints/day`,
             data: t.counts,
-            borderColor: tk.series[0],
-            backgroundColor: 'rgba(42, 120, 214, 0.08)',
+            borderColor: tk.primary,
+            backgroundColor: hexA(tk.primary, 0.09),
             fill: true,
           },
         ],
@@ -120,7 +121,7 @@
             <span class="pill ${i.confidence}" style="margin-left:auto">confidence: ${i.confidence}</span>
           </div>
           <p>${esc(i.narrative)}</p>
-          <p class="muted small">observed ${i.observedTotal} vs ~${Math.round(i.expectedTotal)} expected
+          <p class="fig">observed ${i.observedTotal} vs ~${Math.round(i.expectedTotal)} expected
              &middot; baseline ${i.baselineDailyMean}/day &middot; z=${i.zScore}</p>
         </div>`
         )
@@ -135,7 +136,7 @@
           .map(
             (p) => `<div class="insight">
           <div class="head">
-            <span class="spike" style="color:var(--series-5)">+${fmt.n(p.predictedExtraPerDay)}/day</span>
+            <span class="spike violet">+${fmt.n(p.predictedExtraPerDay)}/day</span>
             <b>${esc(p.category)}</b>
             <span class="muted small">${esc(p.department)}</span>
             <span class="pill open" style="margin-left:auto">${esc(p.serviceName)} DOWN ${p.outageOpenHours}h</span>
@@ -146,6 +147,18 @@
           .join('')
       : '<span class="muted">No open outages - nothing to predict. When a service goes down, expected complaint surges appear here and are alerted to departments.</span>';
   }
+
+  /** hex color + alpha -> rgba() (CSS vars hold plain hex). */
+  function hexA(hex, a) {
+    const h = hex.replace('#', '');
+    const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+  }
+
+  onThemeChange(() => {
+    tk = chartDefaults(Chart);
+    drawTimeline();
+  });
 
   navActive();
   demoBanner();
