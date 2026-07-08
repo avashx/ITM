@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ops Dashboard - IT Monitor</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">IT Monitor</span>
+      <span class="sub">GNCTD Service Health &amp; Grievance Intelligence</span>
+    </div>
+    <nav class="nav">
+      <a href="/">Status</a>
+      <a href="/dashboard.html">Ops Dashboard</a>
+      <a href="/grievances.html">Grievances</a>
+      <a href="/correlation.html">Correlation</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <div id="demo-banner" class="demo-banner"></div>
+    <div class="tiles" id="tiles"></div>
+
+    <div class="grid cols-2">
+      <section class="card">
+        <h2>Latency - <span id="latency-svc-name">select a service</span></h2>
+        <div class="filters">
+          <select id="latency-svc"></select>
+          <select id="latency-hours">
+            <option value="6">last 6 h</option>
+            <option value="24" selected>last 24 h</option>
+            <option value="72">last 3 days</option>
+          </select>
+        </div>
+        <div class="chart-box"><canvas id="latency-chart"></canvas></div>
+      </section>
+
+      <section class="card">
+        <h2>Live check feed</h2>
+        <div class="feed" id="check-feed"><div class="item">Waiting for next check cycle&hellip;</div></div>
+      </section>
+    </div>
+
+    <div class="grid cols-2">
+      <section class="card">
+        <h2>Recent incidents (30 days)</h2>
+        <div class="tbl-scroll">
+          <table class="tbl" id="incident-tbl">
+            <thead><tr><th>Service</th><th>Started</th><th class="num">Duration</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>SSL certificate expiry (soonest)</h2>
+        <div class="tbl-scroll">
+          <table class="tbl" id="ssl-tbl">
+            <thead><tr><th>Service</th><th>Issuer</th><th class="num">Days left</th><th>Expires</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>Alert feed</h2>
+      <div class="feed" id="alert-feed"></div>
+    </section>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/vendor/chartjs/chart.umd.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

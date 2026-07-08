@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GNCTD Service Status - IT Monitor</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128225;</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">IT Monitor</span>
+      <span class="sub">GNCTD Service Health &amp; Grievance Intelligence</span>
+    </div>
+    <nav class="nav">
+      <a href="/">Status</a>
+      <a href="/dashboard.html">Ops Dashboard</a>
+      <a href="/grievances.html">Grievances</a>
+      <a href="/correlation.html">Correlation</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <div id="demo-banner" class="demo-banner"></div>
+
+    <div id="overall" class="overall operational">
+      <span class="dot"></span>
+      <span id="overall-text">Loading service status&hellip;</span>
+      <small id="overall-time"></small>
+    </div>
+
+    <div class="tiles" id="tiles"></div>
+
+    <section id="incidents-card" class="card" style="display:none">
+      <h2>Active incidents</h2>
+      <div id="incidents" class="feed"></div>
+    </section>
+
+    <div id="categories"></div>
+
+    <footer class="foot">
+      Government of NCT of Delhi &middot; e-Services Health Monitor &middot;
+      checks run every 5 minutes &middot; <span id="svc-count"></span>
+    </footer>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/status.js"></script>
+</body>
+</html>

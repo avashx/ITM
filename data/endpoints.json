@@ -1,0 +1,731 @@
+{
+  "_comment": "Researched GNCTD / Delhi public service endpoints (compiled 2026-07-07). verification.method: 'search-confirmed' = canonical URL confirmed live in web-search results on the compile date; 'well-known' = long-established official domain, re-verify with `npm run verify:endpoints` from an unrestricted network. relatedGrievanceCategories must match names in data/reference/departments.json - the correlation engine (Module 3) uses them to link outages to complaint spikes. See ENDPOINTS.md for the human-readable table.",
+  "endpoints": [
+    {
+      "name": "e-District Delhi (legacy portal)",
+      "url": "https://edistrict.delhigovt.nic.in/",
+      "department": "Revenue Department",
+      "category": "Certificates & e-District",
+      "description": "Certificates (income/caste/domicile/marriage), pensions and 100+ citizen services",
+      "relatedGrievanceCategories": ["Certificates (e-District)", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "e-District Delhi (new portal)",
+      "url": "https://edistrict.delhi.gov.in/",
+      "department": "Revenue Department",
+      "category": "Certificates & e-District",
+      "description": "Next-generation e-District services portal",
+      "relatedGrievanceCategories": ["Certificates (e-District)", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Delhi Government Portal",
+      "url": "https://delhi.gov.in/",
+      "department": "General Administration",
+      "category": "GNCTD Portals",
+      "description": "Main GNCTD portal - gateway to all department sites",
+      "relatedGrievanceCategories": ["Portal & e-Service Issues"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "PGMS (Public Grievance Monitoring System)",
+      "url": "https://pgms.delhi.gov.in/",
+      "department": "Chief Minister Office / AR",
+      "category": "Grievance & RTI",
+      "description": "Central grievance filing and monitoring for all GNCTD departments",
+      "relatedGrievanceCategories": ["Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "PGMS Legacy (OPGMS)",
+      "url": "https://opgms.delhigovt.nic.in/",
+      "department": "Administrative Reforms",
+      "category": "Grievance & RTI",
+      "description": "Legacy grievance status portal",
+      "relatedGrievanceCategories": ["Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Public Grievances Commission",
+      "url": "https://pgc.delhi.gov.in/",
+      "department": "Public Grievances Commission",
+      "category": "Grievance & RTI",
+      "description": "Appellate grievance body for GNCTD",
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "DORIS (Property Registration)",
+      "url": "https://doris.delhigovt.nic.in/",
+      "department": "Revenue Department",
+      "category": "Property & Land",
+      "description": "Delhi Online Registration Information System - deed search, stamp duty, SRO appointments. Note: SRO registration workflows are migrating to NGDRS",
+      "relatedGrievanceCategories": ["Land Records & Registration", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07", "note": "SR offices migrating to NGDRS (ngdrs.gov.in)" }
+    },
+    {
+      "name": "eSearch (Registered Deed Search)",
+      "url": "https://esearch.delhigovt.nic.in/",
+      "department": "Revenue Department",
+      "category": "Property & Land",
+      "description": "Search registered property documents",
+      "relatedGrievanceCategories": ["Land Records & Registration"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Delhi Land Records (Indraprastha Bhulekh)",
+      "url": "https://dlrc.delhi.gov.in/",
+      "department": "Revenue Department",
+      "category": "Property & Land",
+      "description": "Khasra/Khatauni/Jamabandi land records",
+      "relatedGrievanceCategories": ["Land Records & Registration"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Revenue Department",
+      "url": "https://revenue.delhi.gov.in/",
+      "department": "Revenue Department",
+      "category": "District Administration",
+      "description": "Divisional Commissioner / Revenue HQ site",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Delhi Jal Board",
+      "url": "https://djb.gov.in/",
+      "department": "Delhi Jal Board",
+      "category": "Water (DJB)",
+      "description": "Water bills, new connections, tanker booking, complaints",
+      "relatedGrievanceCategories": ["Water Billing", "Water Supply", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Delhi Jal Board (department site)",
+      "url": "https://delhijalboard.delhi.gov.in/",
+      "department": "Delhi Jal Board",
+      "category": "Water (DJB)",
+      "description": "DJB information site on the S3WaaS platform",
+      "relatedGrievanceCategories": ["Water Supply"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "MCD Online Citizen Services",
+      "url": "https://mcdonline.nic.in/",
+      "department": "Municipal Corporation of Delhi",
+      "category": "Municipal (MCD/NDMC)",
+      "description": "Property tax (UPIC), licences, birth/death certificates and other MCD services",
+      "relatedGrievanceCategories": ["Property Tax", "Birth & Death Certificates", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "MCD Birth & Death Registration",
+      "url": "https://rbd.mcdonline.nic.in/rbd/web/citizen/info",
+      "department": "Municipal Corporation of Delhi",
+      "category": "Municipal (MCD/NDMC)",
+      "description": "Registration of births and deaths module",
+      "relatedGrievanceCategories": ["Birth & Death Certificates", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "New Delhi Municipal Council",
+      "url": "https://www.ndmc.gov.in/",
+      "department": "NDMC",
+      "category": "Municipal (MCD/NDMC)",
+      "description": "NDMC citizen services (Lutyens' zone)",
+      "relatedGrievanceCategories": ["Garbage & Sanitation"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Transport Department",
+      "url": "https://transport.delhi.gov.in/",
+      "department": "Transport Department",
+      "category": "Transport & DTC",
+      "description": "Faceless services: DL, RC, permits, fitness",
+      "relatedGrievanceCategories": ["Licences & Registration", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Delhi Transport Corporation",
+      "url": "https://dtc.delhi.gov.in/",
+      "department": "Delhi Transport Corporation",
+      "category": "Transport & DTC",
+      "description": "DTC routes, passes, corporate info",
+      "relatedGrievanceCategories": ["Bus Services (DTC/Cluster)"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "DTC Online Bus Pass",
+      "url": "https://dtcpass.delhi.gov.in/",
+      "department": "Delhi Transport Corporation",
+      "category": "Transport & DTC",
+      "description": "Online bus pass application for DTC & cluster buses",
+      "relatedGrievanceCategories": ["Bus Services (DTC/Cluster)", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Parivahan Sewa (VAHAN/SARATHI gateway)",
+      "url": "https://parivahan.gov.in/",
+      "department": "MoRTH (serves Delhi RTOs)",
+      "category": "Transport & DTC",
+      "description": "National portal backing Delhi vehicle registration & licences",
+      "relatedGrievanceCategories": ["Licences & Registration"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "SARATHI (Driving Licence)",
+      "url": "https://sarathi.parivahan.gov.in/",
+      "department": "MoRTH (serves Delhi RTOs)",
+      "category": "Transport & DTC",
+      "description": "Driving licence services for Delhi",
+      "relatedGrievanceCategories": ["Licences & Registration"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "NFS Delhi (Ration / Food Security)",
+      "url": "https://nfs.delhigovt.nic.in/",
+      "department": "Food & Civil Supplies",
+      "category": "Food & Civil Supplies",
+      "description": "Ration card services, e-ration card, FPS linkage",
+      "relatedGrievanceCategories": ["Ration Card", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Food Supplies & Consumer Affairs",
+      "url": "https://fsd.delhi.gov.in/",
+      "department": "Food & Civil Supplies",
+      "category": "Food & Civil Supplies",
+      "description": "Department site - ration card info, FPS directory",
+      "relatedGrievanceCategories": ["Ration Card", "Fair Price Shops"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "NFSA Delhi State Portal",
+      "url": "https://nfsa.gov.in/State/DL",
+      "department": "DFPD (serves Delhi PDS)",
+      "category": "Food & Civil Supplies",
+      "description": "National Food Security portal - Delhi state view",
+      "relatedGrievanceCategories": ["Ration Card"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Delhi Police",
+      "url": "https://delhipolice.gov.in/",
+      "department": "Delhi Police",
+      "category": "Police & Safety",
+      "description": "e-FIR, complaints, verification services",
+      "relatedGrievanceCategories": ["Safety & Policing"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Delhi Police Lost & Found",
+      "url": "https://lostfound.delhipolice.gov.in/",
+      "department": "Delhi Police",
+      "category": "Police & Safety",
+      "description": "Lost article report and retrieval",
+      "relatedGrievanceCategories": ["Safety & Policing", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Delhi Traffic Police",
+      "url": "https://traffic.delhipolice.gov.in/",
+      "department": "Delhi Police",
+      "category": "Police & Safety",
+      "description": "Challan status, traffic notices",
+      "relatedGrievanceCategories": ["Traffic"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "BSES Delhi (BRPL/BYPL)",
+      "url": "https://www.bsesdelhi.com/",
+      "department": "Power (DISCOMs)",
+      "category": "Power (DISCOMs & Utilities)",
+      "description": "Electricity bills, outage complaints for South/West/East/Central Delhi",
+      "relatedGrievanceCategories": ["Power Billing", "Power Outage", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Tata Power DDL",
+      "url": "https://www.tatapower-ddl.com/",
+      "department": "Power (DISCOMs)",
+      "category": "Power (DISCOMs & Utilities)",
+      "description": "Electricity bills, new connections for North Delhi",
+      "relatedGrievanceCategories": ["Power Billing", "Power Outage", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Delhi SLDC",
+      "url": "https://www.delhisldc.org/",
+      "department": "State Load Despatch Centre",
+      "category": "Power (DISCOMs & Utilities)",
+      "description": "Real-time Delhi power demand/supply data",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DERC",
+      "url": "https://derc.gov.in/",
+      "department": "Electricity Regulatory Commission",
+      "category": "Power (DISCOMs & Utilities)",
+      "description": "Tariff orders, consumer complaint regulations",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Delhi Transco Ltd",
+      "url": "https://dtl.gov.in/",
+      "department": "Delhi Transco",
+      "category": "Power (DISCOMs & Utilities)",
+      "description": "Transmission utility of Delhi",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "IPGCL-PPCL",
+      "url": "https://ipgcl-ppcl.gov.in/",
+      "department": "Indraprastha Power Generation",
+      "category": "Power (DISCOMs & Utilities)",
+      "description": "State generation companies",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Excise Department",
+      "url": "https://excise.delhi.gov.in/",
+      "department": "Excise, Entertainment & Luxury Tax",
+      "category": "Tax & Revenue",
+      "description": "Excise licences and policy",
+      "relatedGrievanceCategories": ["Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "ESCIMS (Excise Supply Chain)",
+      "url": "https://delhiexcise.gov.in/",
+      "department": "Excise, Entertainment & Luxury Tax",
+      "category": "Tax & Revenue",
+      "description": "Licensee portal - being replaced by NIC's e-Abkari",
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07", "note": "e-Abkari transition in progress" }
+    },
+    {
+      "name": "Trade & Taxes (DVAT/GST)",
+      "url": "https://dvat.gov.in/",
+      "department": "Trade & Taxes",
+      "category": "Tax & Revenue",
+      "description": "VAT/GST dealer services for Delhi",
+      "relatedGrievanceCategories": ["Portal & e-Service Issues"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Labour CIS (Shops & Establishments)",
+      "url": "https://labourcis.nic.in/",
+      "department": "Labour Department",
+      "category": "Employment & Labour",
+      "description": "Online shop & establishment registration (instant certificate)",
+      "relatedGrievanceCategories": ["Shops & Establishments", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Labour Department",
+      "url": "https://labour.delhi.gov.in/",
+      "department": "Labour Department",
+      "category": "Employment & Labour",
+      "description": "Labour welfare, BOCW registration, minimum wages",
+      "relatedGrievanceCategories": ["Wages & Employment"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Rozgar Bazaar (Jobs Portal)",
+      "url": "https://jobs.delhi.gov.in/",
+      "department": "Employment Department",
+      "category": "Employment & Labour",
+      "description": "Job-seeker / employer matching portal",
+      "relatedGrievanceCategories": ["Wages & Employment", "Portal & e-Service Issues"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Health & Family Welfare",
+      "url": "https://health.delhi.gov.in/",
+      "department": "Health & Family Welfare",
+      "category": "Health",
+      "description": "Hospitals directory, OPD registration info, schemes",
+      "relatedGrievanceCategories": ["Hospitals & Dispensaries", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "DGEHS (Directorate General of Health Services)",
+      "url": "https://dgehs.delhi.gov.in/",
+      "department": "Health & Family Welfare",
+      "category": "Health",
+      "description": "Health services directorate",
+      "relatedGrievanceCategories": ["Hospitals & Dispensaries"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "ORS Hospital Appointments",
+      "url": "https://ors.gov.in/",
+      "department": "MoHFW (serves Delhi govt hospitals)",
+      "category": "Health",
+      "description": "Online OPD appointment booking used by Delhi government hospitals",
+      "relatedGrievanceCategories": ["Hospitals & Dispensaries", "Portal & e-Service Issues"],
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "Directorate of Education",
+      "url": "https://www.edudel.nic.in/",
+      "department": "Education (DoE)",
+      "category": "Education & Universities",
+      "description": "School admissions (incl. EWS), staff, results",
+      "relatedGrievanceCategories": ["School Admissions", "Portal & e-Service Issues"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "SCERT Delhi",
+      "url": "https://scert.delhi.gov.in/",
+      "department": "Education (DoE)",
+      "category": "Education & Universities",
+      "description": "State Council of Educational Research & Training",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DSSSB (Recruitment Board)",
+      "url": "https://dsssb.delhi.gov.in/",
+      "department": "DSSSB",
+      "category": "Employment & Labour",
+      "description": "GNCTD recruitment applications and results",
+      "relatedGrievanceCategories": ["Portal & e-Service Issues"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "GGSIPU",
+      "url": "http://www.ipu.ac.in/",
+      "department": "Higher Education",
+      "category": "Education & Universities",
+      "description": "GGS Indraprastha University (state university)",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Delhi Technological University",
+      "url": "https://dtu.ac.in/",
+      "department": "Higher Education",
+      "category": "Education & Universities",
+      "description": "DTU admissions and academics",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "NSUT",
+      "url": "https://nsut.ac.in/",
+      "department": "Higher Education",
+      "category": "Education & Universities",
+      "description": "Netaji Subhas University of Technology",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DSEU",
+      "url": "https://dseu.ac.in/",
+      "department": "Higher Education",
+      "category": "Education & Universities",
+      "description": "Delhi Skill & Entrepreneurship University",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "IT Department",
+      "url": "https://it.delhi.gov.in/",
+      "department": "Information Technology",
+      "category": "Open Data & IT",
+      "description": "GNCTD IT department (e-governance nodal agency)",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Delhi Open Data Portal",
+      "url": "https://delhi.data.gov.in/",
+      "department": "Information Technology",
+      "category": "Open Data & IT",
+      "description": "GNCTD datasets on the OGD state instance",
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "OGD India API Gateway",
+      "url": "https://api.data.gov.in/",
+      "department": "MeitY/NIC (serves Delhi datasets)",
+      "category": "Open Data & IT",
+      "description": "API gateway used to pull open datasets programmatically",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DDA",
+      "url": "https://dda.gov.in/",
+      "department": "Delhi Development Authority",
+      "category": "Property & Land",
+      "description": "Housing schemes, land management (MoHUA body serving Delhi)",
+      "relatedGrievanceCategories": ["Housing Allotment & Maintenance", "Portal & e-Service Issues"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DUSIB (Urban Shelter Board)",
+      "url": "https://delhishelterboard.in/",
+      "department": "DUSIB",
+      "category": "Housing & Shelter",
+      "description": "Night shelters, JJ cluster rehabilitation",
+      "relatedGrievanceCategories": ["Slum & JJ Clusters"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DSIIDC",
+      "url": "https://dsiidc.org/",
+      "department": "DSIIDC",
+      "category": "Housing & Shelter",
+      "description": "Industrial infrastructure & housing corporation",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DPCC (Pollution Control)",
+      "url": "https://www.dpcc.delhigovt.nic.in/",
+      "department": "Environment & DPCC",
+      "category": "Environment",
+      "description": "Consents, air quality, pollution complaints",
+      "relatedGrievanceCategories": ["Air & Noise Pollution", "Portal & e-Service Issues"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Environment Department",
+      "url": "https://environment.delhi.gov.in/",
+      "department": "Environment & DPCC",
+      "category": "Environment",
+      "description": "Environment policy and programmes",
+      "relatedGrievanceCategories": ["Air & Noise Pollution"],
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "Forest & Wildlife Department",
+      "url": "https://forest.delhi.gov.in/",
+      "department": "Forest & Wildlife",
+      "category": "Environment",
+      "description": "Tree permissions, green cover",
+      "relatedGrievanceCategories": ["Trees & Green Cover"],
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "CEO Delhi (Elections)",
+      "url": "https://www.ceodelhi.gov.in/",
+      "department": "Chief Electoral Officer",
+      "category": "GNCTD Portals",
+      "description": "Voter services for NCT of Delhi",
+      "relatedGrievanceCategories": ["Portal & e-Service Issues"],
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Delhi District Courts",
+      "url": "https://delhicourts.nic.in/",
+      "department": "Judiciary (Delhi)",
+      "category": "GNCTD Portals",
+      "description": "District courts case status and cause lists",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Delhi High Court",
+      "url": "https://delhihighcourt.nic.in/",
+      "department": "Judiciary (Delhi)",
+      "category": "GNCTD Portals",
+      "description": "High Court case status, e-filing",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Tihar Prisons",
+      "url": "https://tiharprisons.nic.in/",
+      "department": "Prisons",
+      "category": "Police & Safety",
+      "description": "e-Mulakat visitor booking, prison services",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Delhi Fire Service",
+      "url": "https://dfs.delhi.gov.in/",
+      "department": "Delhi Fire Service",
+      "category": "Police & Safety",
+      "description": "Fire NOC applications",
+      "relatedGrievanceCategories": ["Portal & e-Service Issues"],
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "Delhi Tourism",
+      "url": "https://delhitourism.gov.in/",
+      "department": "Tourism (DTTDC)",
+      "category": "GNCTD Portals",
+      "description": "Tourism corporation - bookings and info",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Women & Child Development",
+      "url": "https://wcd.delhi.gov.in/",
+      "department": "Women & Child Development",
+      "category": "Social Welfare",
+      "description": "Anganwadi, pensions for women in distress",
+      "relatedGrievanceCategories": ["Pensions", "Welfare Schemes"],
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "Social Welfare Department",
+      "url": "https://socialwelfare.delhi.gov.in/",
+      "department": "Social Welfare",
+      "category": "Social Welfare",
+      "description": "Old-age/disability pensions, scholarships",
+      "relatedGrievanceCategories": ["Pensions", "Welfare Schemes", "Portal & e-Service Issues"],
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "Delhi Commission for Women",
+      "url": "https://dcw.delhi.gov.in/",
+      "department": "DCW",
+      "category": "Social Welfare",
+      "description": "Women's helpline and complaints",
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "DCPCR (Child Rights)",
+      "url": "https://dcpcr.delhi.gov.in/",
+      "department": "DCPCR",
+      "category": "Social Welfare",
+      "description": "Child rights commission",
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "Higher Education Directorate",
+      "url": "https://dhe.delhi.gov.in/",
+      "department": "Higher Education",
+      "category": "Education & Universities",
+      "description": "Higher education directorate",
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "Training & Technical Education",
+      "url": "https://dtte.delhi.gov.in/",
+      "department": "Training & Technical Education",
+      "category": "Education & Universities",
+      "description": "ITIs, polytechnics, admissions",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Planning Department",
+      "url": "https://delhiplanning.delhi.gov.in/",
+      "department": "Planning",
+      "category": "GNCTD Portals",
+      "description": "Economic survey, outcome budget",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "Finance Department",
+      "url": "https://finance.delhi.gov.in/",
+      "department": "Finance",
+      "category": "GNCTD Portals",
+      "description": "Budget and finance department site",
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "PWD Delhi",
+      "url": "https://pwd.delhi.gov.in/",
+      "department": "Public Works Department",
+      "category": "GNCTD Portals",
+      "description": "Roads, flyovers, government buildings",
+      "relatedGrievanceCategories": ["Roads & Potholes", "Streetlights"],
+      "verification": { "method": "well-known", "note": "S3WaaS pattern - re-verify" }
+    },
+    {
+      "name": "Delhi Metro (DMRC)",
+      "url": "https://www.delhimetrorail.com/",
+      "department": "DMRC",
+      "category": "Transport & DTC",
+      "description": "Metro travel, smart cards, updates",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DIMTS",
+      "url": "https://www.dimts.in/",
+      "department": "DIMTS",
+      "category": "Transport & DTC",
+      "description": "Cluster buses, ITS, One Delhi",
+      "verification": { "method": "well-known" }
+    },
+    {
+      "name": "DM North",
+      "url": "https://dmnorth.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate North",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    },
+    {
+      "name": "DM North East",
+      "url": "https://dmnortheast.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate North East",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    },
+    {
+      "name": "DM North West",
+      "url": "https://dmnorthwest.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate North West",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    },
+    {
+      "name": "DM South",
+      "url": "https://dmsouth.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate South",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    },
+    {
+      "name": "DM South East",
+      "url": "https://dmsoutheast.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate South East",
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "DM South West",
+      "url": "https://dmsouthwest.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate South West",
+      "verification": { "method": "search-confirmed", "verifiedAt": "2026-07-07" }
+    },
+    {
+      "name": "DM East",
+      "url": "https://dmeast.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate East",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    },
+    {
+      "name": "DM West",
+      "url": "https://dmwest.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate West",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    },
+    {
+      "name": "DM Central",
+      "url": "https://dmcentral.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate Central",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    },
+    {
+      "name": "DM New Delhi",
+      "url": "https://dmnewdelhi.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate New Delhi",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    },
+    {
+      "name": "DM Shahdara",
+      "url": "https://dmshahdara.delhi.gov.in/",
+      "department": "District Administration",
+      "category": "District Administration",
+      "description": "District Magistrate Shahdara",
+      "verification": { "method": "well-known", "note": "S3WaaS district site" }
+    }
+  ]
+}

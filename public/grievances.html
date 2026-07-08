@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grievance Analytics - IT Monitor</title>
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="/vendor/leaflet.markercluster/MarkerCluster.css" />
+  <link rel="stylesheet" href="/vendor/leaflet.markercluster/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">IT Monitor</span>
+      <span class="sub">GNCTD Service Health &amp; Grievance Intelligence</span>
+    </div>
+    <nav class="nav">
+      <a href="/">Status</a>
+      <a href="/dashboard.html">Ops Dashboard</a>
+      <a href="/grievances.html">Grievances</a>
+      <a href="/correlation.html">Correlation</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <div id="demo-banner" class="demo-banner"></div>
+
+    <div class="filters">
+      <label>Department</label>
+      <select id="f-dept"><option value="">All departments</option></select>
+      <label>Window</label>
+      <select id="f-days">
+        <option value="7">7 days</option>
+        <option value="30" selected>30 days</option>
+        <option value="90">90 days</option>
+      </select>
+      <label>Status</label>
+      <select id="f-status">
+        <option value="">Any status</option>
+        <option value="registered">Registered</option>
+        <option value="in_progress">In progress</option>
+        <option value="resolved">Resolved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <label>Map layer</label>
+      <select id="f-layer">
+        <option value="heat" selected>Heatmap</option>
+        <option value="cluster">Complaint clusters</option>
+        <option value="district">District choropleth</option>
+        <option value="ward">Ward choropleth</option>
+      </select>
+      <button id="f-apply">Apply</button>
+    </div>
+
+    <div class="tiles" id="tiles"></div>
+
+    <section class="card">
+      <h2>Complaint heatmap - NCT of Delhi</h2>
+      <div id="map"></div>
+      <p class="muted small" style="margin:8px 0 0">
+        Basemap &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors.
+        Boundaries: DataMeet (CC-BY-SA 2.5-IN) &amp; datta07/INDIAN-SHAPEFILES (MIT).
+        Data shown is <b>synthetic</b> unless real feeds are connected - see DATA_SOURCES.md.
+      </p>
+    </section>
+
+    <div class="grid cols-2">
+      <section class="card">
+        <h2>Daily registrations trend</h2>
+        <div class="chart-box"><canvas id="trend-chart"></canvas></div>
+      </section>
+      <section class="card">
+        <h2>Top complaint categories</h2>
+        <div class="chart-box"><canvas id="cat-chart"></canvas></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>Department scorecard (SLA per PGMS norms: respond 7d / resolve 30d)</h2>
+      <div class="tbl-scroll">
+        <table class="tbl" id="dept-tbl">
+          <thead>
+            <tr>
+              <th>Department</th><th class="num">Total</th><th class="num">Open</th>
+              <th class="num">Resolved</th><th class="num">SLA breach %</th><th class="num">Avg resolution (days)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/vendor/leaflet/leaflet.js"></script>
+  <script src="/vendor/leaflet.heat/leaflet-heat.js"></script>
+  <script src="/vendor/leaflet.markercluster/leaflet.markercluster.js"></script>
+  <script src="/vendor/chartjs/chart.umd.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/grievances.js"></script>
+</body>
+</html>
