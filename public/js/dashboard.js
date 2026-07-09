@@ -3,23 +3,33 @@
 /* global Chart */
 (function () {
   'use strict';
-  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults } = window.ITM;
-  const tk = chartDefaults(Chart);
+  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange, sevIcon } =
+    window.ITM;
+  let tk = chartDefaults(Chart);
 
   let latencyChart = null;
   let services = [];
+
+  const ARROW =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>';
 
   async function loadTiles() {
     const s = await api('/api/status/summary');
     const avgLat = avg(
       s.categories.flatMap((c) => c.services.map((x) => x.latencyMs).filter((v) => v != null))
     );
+    const nInc = s.activeIncidents.length;
     document.getElementById('tiles').innerHTML = `
-      <div class="tile"><div class="v">${fmt.n(s.totals.services)}</div><div class="l">Services</div></div>
-      <div class="tile"><div class="v good">${fmt.n(s.totals.operational)}</div><div class="l">Operational</div></div>
-      <div class="tile"><div class="v critical">${fmt.n(s.totals.down)}</div><div class="l">Down</div></div>
-      <div class="tile"><div class="v">${fmt.ms(Math.round(avgLat || 0))}</div><div class="l">Avg latency (last check)</div></div>
-      <div class="tile"><div class="v">${fmt.n(s.activeIncidents.length)}</div><div class="l">Open incidents</div></div>`;
+      <div class="tile hero${nInc ? ' alert' : ''}">
+        <a class="corner" href="/" title="Open public status page">${ARROW}</a>
+        <div class="l">Open incidents</div>
+        <div class="v">${fmt.n(nInc)}</div>
+        <div class="delta">${nInc ? '<span class="up">&#9650;</span> teams alerted automatically' : 'all services responding'}</div>
+      </div>
+      <div class="tile"><div class="l">Services</div><div class="v">${fmt.n(s.totals.services)}</div><div class="delta">under 5-min watch</div></div>
+      <div class="tile"><div class="l">Operational</div><div class="v good">${fmt.n(s.totals.operational)}</div><div class="delta">healthy responses</div></div>
+      <div class="tile"><div class="l">Down</div><div class="v critical">${fmt.n(s.totals.down)}</div><div class="delta">3+ straight failures</div></div>
+      <div class="tile"><div class="l">Avg latency</div><div class="v info">${fmt.ms(Math.round(avgLat || 0))}</div><div class="delta">last check cycle</div></div>`;
   }
 
   async function loadServices() {
@@ -56,8 +66,9 @@
           {
             label: 'Latency (ms)',
             data,
-            borderColor: tk.series[0],
-            backgroundColor: 'transparent',
+            borderColor: tk.primary,
+            backgroundColor: hexA(tk.primary, 0.08),
+            fill: true,
             spanGaps: false,
           },
           {
@@ -121,19 +132,26 @@
       rows
         .map(
           (a) => `<div class="item ${a.severity}">
-            <b>${esc(a.title)}</b>${esc(a.message)}
-            <div class="t">${fmt.dt(a.createdAt)} &middot; ${esc(a.type)}${a.email && a.email.sent ? ' &middot; emailed' : ''}</div>
+            ${sevIcon(a.severity)}
+            <div class="ib">
+              <b>${esc(a.title)}</b>${esc(a.message)}
+              <div class="t">${fmt.dt(a.createdAt)} &middot; ${esc(a.type)}${a.email && a.email.sent ? ' &middot; emailed' : ''}</div>
+            </div>
           </div>`
         )
-        .join('') || '<div class="item">No alerts yet</div>';
+        .join('') ||
+      `<div class="item">${sevIcon('neutral')}<div class="ib"><b>No alerts yet</b></div></div>`;
   }
 
   function feedCheck(c) {
     const feed = document.getElementById('check-feed');
     const div = document.createElement('div');
     div.className = `item ${c.ok ? 'info' : 'critical'}`;
-    div.innerHTML = `<b>${esc(c.name)}</b> ${c.ok ? `OK - HTTP ${c.httpStatus} in ${fmt.ms(c.latencyMs)}` : `FAIL - ${esc(c.error)}`}
-      <div class="t">${fmt.dt(c.checkedAt)}${c.mode !== 'live' ? ` &middot; ${c.mode}` : ''}</div>`;
+    div.innerHTML = `${sevIcon(c.ok ? 'info' : 'critical')}
+      <div class="ib">
+        <b>${esc(c.name)}</b> ${c.ok ? `OK — HTTP ${c.httpStatus} in ${fmt.ms(c.latencyMs)}` : `FAIL — ${esc(c.error)}`}
+        <div class="t">${fmt.dt(c.checkedAt)}${c.mode !== 'live' ? ` &middot; ${c.mode}` : ''}</div>
+      </div>`;
     feed.prepend(div);
     while (feed.children.length > 40) feed.removeChild(feed.lastChild);
   }
@@ -141,6 +159,18 @@
   function avg(a) {
     return a.length ? a.reduce((s, v) => s + v, 0) / a.length : null;
   }
+
+  /** hex color + alpha -> rgba() (CSS vars hold plain hex). */
+  function hexA(hex, a) {
+    const h = hex.replace('#', '');
+    const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16);
+    return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+  }
+
+  onThemeChange(() => {
+    tk = chartDefaults(Chart);
+    drawLatency();
+  });
 
   navActive();
   demoBanner();

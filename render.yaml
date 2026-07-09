@@ -1,0 +1,40 @@
+# Render blueprint - one-click deploy for demos.
+#
+# How to use: push this file to GitHub -> https://dashboard.render.com ->
+# New -> Blueprint -> select the avashx/ITM repo -> fill the secret env vars
+# when prompted (MONGODB_URI at minimum) -> Apply.
+#
+# NOTE: the FREE plan spins the instance down after ~15 min of no HTTP traffic,
+# which pauses the 5-minute monitoring cron until the next visit. That is fine
+# for demos/reviews, but for real 24/7 monitoring use a paid instance or the
+# AWS EC2 + PM2 path in DEPLOYMENT.md.
+services:
+  - type: web
+    name: it-monitor
+    runtime: node
+    plan: free
+    buildCommand: npm install --omit=dev
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TZ
+        value: Asia/Kolkata
+      - key: MONGODB_URI
+        sync: false # secret - paste your Atlas connection string in the dashboard
+      - key: SIMULATE_CHECKS
+        value: "false"
+      - key: MONITOR_ENABLED
+        value: "true"
+      - key: ADMIN_API_KEY
+        generateValue: true
+      # Optional email alerts - set in the dashboard if wanted (see API_KEYS.md)
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: ALERT_EMAIL_TO
+        sync: false

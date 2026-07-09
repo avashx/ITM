@@ -3,31 +3,89 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ops Dashboard - IT Monitor</title>
+  <title>Ops Dashboard · IT Monitor</title>
+  <script>(function(){try{var t=localStorage.getItem('itm-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var q=new URLSearchParams(location.search).get('theme');if(q==='light'||q==='dark')t=q;document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128994;</text></svg>" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo">IT Monitor</span>
-      <span class="sub">GNCTD Service Health &amp; Grievance Intelligence</span>
-    </div>
-    <nav class="nav">
-      <a href="/">Status</a>
-      <a href="/dashboard.html">Ops Dashboard</a>
-      <a href="/grievances.html">Grievances</a>
-      <a href="/correlation.html">Correlation</a>
-    </nav>
-  </header>
+<div class="app">
 
-  <main class="wrap">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </span>
+      <span class="name">IT Monitor<small>GNCTD · DELHI</small></span>
+    </div>
+
+    <div class="side-label">MENU</div>
+    <nav class="side-nav">
+      <a class="side-link" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Service Status</span>
+      </a>
+      <a class="side-link" href="/dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Ops Dashboard</span>
+      </a>
+      <a class="side-link" href="/grievances.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Grievances</span>
+      </a>
+      <a class="side-link" href="/correlation.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        <span>Correlation</span>
+      </a>
+    </nav>
+
+    <div class="side-label">GENERAL</div>
+    <nav class="side-nav">
+      <a class="side-link" href="https://github.com/avashx/ITM#readme" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span>Documentation</span>
+      </a>
+      <a class="side-link" href="/api/health" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>
+        <span>API Health</span>
+      </a>
+    </nav>
+
+    <div class="side-foot">
+      <div class="side-card">
+        <div class="t"><span class="dot"></span>e-Services Watch</div>
+        <div class="d"><span class="v">85</span> public endpoints · probed every <span class="v">5 min</span> · alerts on 3 straight failures</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="page-head">
+      <div>
+        <h1>Ops Dashboard</h1>
+        <p class="sub">Latency, incidents, certificate expiry and the live alert flow</p>
+      </div>
+      <div class="head-actions">
+        <div class="chip off" id="live-chip"><span class="dot"></span><span class="txt">OFFLINE</span></div>
+        <div class="chip clock"><span id="ist-clock">--:--:--</span></div>
+        <button class="icon-btn" id="theme-btn" title="Toggle theme">
+          <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <div class="who"><div class="av">IT</div><div class="wt">IT Department<small>GNCTD · Delhi</small></div></div>
+      </div>
+    </header>
+
     <div id="demo-banner" class="demo-banner"></div>
     <div class="tiles" id="tiles"></div>
 
     <div class="grid cols-2">
       <section class="card">
-        <h2>Latency - <span id="latency-svc-name">select a service</span></h2>
-        <div class="filters">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Latency <span class="aside" id="latency-svc-name">select a service</span>
+        </h2>
+        <div class="filters" style="box-shadow:none;border:none;background:transparent;padding:0 0 10px">
           <select id="latency-svc"></select>
           <select id="latency-hours">
             <option value="6">last 6 h</option>
@@ -39,14 +97,20 @@
       </section>
 
       <section class="card">
-        <h2>Live check feed</h2>
-        <div class="feed" id="check-feed"><div class="item">Waiting for next check cycle&hellip;</div></div>
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Live check feed
+        </h2>
+        <div class="feed" id="check-feed"><div class="item"><span class="sev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><div class="ib"><b>Waiting for next check cycle&hellip;</b><span class="muted small">results stream in live every 5 minutes</span></div></div></div>
       </section>
     </div>
 
     <div class="grid cols-2">
       <section class="card">
-        <h2>Recent incidents (30 days)</h2>
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Recent incidents <span class="aside">30 days</span>
+        </h2>
         <div class="tbl-scroll">
           <table class="tbl" id="incident-tbl">
             <thead><tr><th>Service</th><th>Started</th><th class="num">Duration</th><th>Status</th></tr></thead>
@@ -56,7 +120,10 @@
       </section>
 
       <section class="card">
-        <h2>SSL certificate expiry (soonest)</h2>
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          SSL certificate expiry <span class="aside">soonest first</span>
+        </h2>
         <div class="tbl-scroll">
           <table class="tbl" id="ssl-tbl">
             <thead><tr><th>Service</th><th>Issuer</th><th class="num">Days left</th><th>Expires</th></tr></thead>
@@ -67,14 +134,19 @@
     </div>
 
     <section class="card">
-      <h2>Alert feed</h2>
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        Alert feed
+      </h2>
       <div class="feed" id="alert-feed"></div>
     </section>
   </main>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/vendor/chartjs/chart.umd.js"></script>
-  <script src="/js/common.js"></script>
-  <script src="/js/dashboard.js"></script>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/vendor/chartjs/chart.umd.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/dashboard.js"></script>
 </body>
 </html>
