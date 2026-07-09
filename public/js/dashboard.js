@@ -25,6 +25,7 @@
         <div class="l">Open incidents</div>
         <div class="v">${fmt.n(nInc)}</div>
         <div class="delta">${nInc ? '<span class="up">&#9650;</span> teams alerted automatically' : 'all services responding'}</div>
+        <div class="meter"><i style="width:${s.totals.services ? Math.round((s.totals.operational / s.totals.services) * 100) : 0}%"></i></div>
       </div>
       <div class="tile"><div class="l">Services</div><div class="v">${fmt.n(s.totals.services)}</div><div class="delta">under 5-min watch</div></div>
       <div class="tile"><div class="l">Operational</div><div class="v good">${fmt.n(s.totals.operational)}</div><div class="delta">healthy responses</div></div>

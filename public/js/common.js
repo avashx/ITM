@@ -91,7 +91,7 @@
    * Call again after a theme change (reads live CSS vars). */
   function chartDefaults(Chart) {
     const tk = tokens();
-    Chart.defaults.font.family = "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif";
+    Chart.defaults.font.family = "'Geist', system-ui, -apple-system, sans-serif";
     Chart.defaults.font.size = 11;
     Chart.defaults.font.weight = 600;
     Chart.defaults.color = tk.muted;
