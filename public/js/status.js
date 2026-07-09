@@ -2,7 +2,7 @@
  * active incidents, client-side search, live socket refresh. */
 (function () {
   'use strict';
-  const { api, fmt, esc, demoBanner, navActive, connectSocket } = window.ITM;
+  const { api, fmt, esc, demoBanner, navActive, connectSocket, sevIcon } = window.ITM;
 
   const OVERALL_TEXT = {
     operational: 'All systems operational',
@@ -33,7 +33,7 @@
       : 0;
     document.getElementById('tiles').innerHTML = `
       <div class="tile hero">
-        <span class="corner">${ARROW}</span>
+        <a class="corner" href="/dashboard.html" title="Open ops dashboard">${ARROW}</a>
         <div class="l">Services monitored</div>
         <div class="v">${fmt.n(s.totals.services)}</div>
         <div class="delta"><span class="up">&#9650;</span> ${okPct}% currently operational</div>
@@ -61,9 +61,12 @@
       incEl.innerHTML = s.activeIncidents
         .map(
           (i) => `<div class="item critical">
-            <b>${esc(i.service ? i.service.name : 'Unknown service')} — DOWN</b>
-            ${esc(i.lastError || '')}
-            <div class="t">since ${fmt.dt(i.startedAt)} &middot; ${esc(i.service ? i.service.department : '')}</div>
+            ${sevIcon('critical')}
+            <div class="ib">
+              <b>${esc(i.service ? i.service.name : 'Unknown service')} — DOWN</b>
+              ${esc(i.lastError || '')}
+              <div class="t">since ${fmt.dt(i.startedAt)} &middot; ${esc(i.service ? i.service.department : '')}</div>
+            </div>
           </div>`
         )
         .join('');
@@ -96,14 +99,21 @@
         return `<i class="${cls}" title="${u}% uptime"></i>`;
       })
       .join('');
-    return `<div class="svc" data-id="${svc.id}" data-q="${esc((svc.name + ' ' + svc.department).toLowerCase())}">
+    return `<div class="svc" data-id="${svc.id}" data-url="${esc(svc.url)}" data-q="${esc((svc.name + ' ' + svc.department).toLowerCase())}" title="Open ${esc(svc.name)} in a new tab">
       <div class="name">${esc(svc.name)}<small>${esc(svc.department)}</small></div>
       <div class="bars" title="last 90 days">${bars}</div>
       <div class="meta">${svc.uptime90 !== null ? svc.uptime90 + '%' : '—'} <small>90d</small></div>
       <div class="meta">${fmt.ms(svc.latencyMs)}</div>
       <span class="pill ${svc.status}">${STATUS_LABEL[svc.status] || svc.status}</span>
+      <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
     </div>`;
   }
+
+  // Clicking a service row opens the monitored government portal in a new tab
+  document.getElementById('categories').addEventListener('click', (e) => {
+    const row = e.target.closest('.svc');
+    if (row && row.dataset.url) window.open(row.dataset.url, '_blank', 'noopener');
+  });
 
   /* ---- client-side search over service rows ---- */
   function applySearch() {

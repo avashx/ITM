@@ -3,7 +3,7 @@
 /* global Chart */
 (function () {
   'use strict';
-  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange } =
+  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange, sevIcon } =
     window.ITM;
   let tk = chartDefaults(Chart);
 
@@ -21,7 +21,7 @@
     const nInc = s.activeIncidents.length;
     document.getElementById('tiles').innerHTML = `
       <div class="tile hero${nInc ? ' alert' : ''}">
-        <span class="corner">${ARROW}</span>
+        <a class="corner" href="/" title="Open public status page">${ARROW}</a>
         <div class="l">Open incidents</div>
         <div class="v">${fmt.n(nInc)}</div>
         <div class="delta">${nInc ? '<span class="up">&#9650;</span> teams alerted automatically' : 'all services responding'}</div>
@@ -132,19 +132,26 @@
       rows
         .map(
           (a) => `<div class="item ${a.severity}">
-            <b>${esc(a.title)}</b>${esc(a.message)}
-            <div class="t">${fmt.dt(a.createdAt)} &middot; ${esc(a.type)}${a.email && a.email.sent ? ' &middot; emailed' : ''}</div>
+            ${sevIcon(a.severity)}
+            <div class="ib">
+              <b>${esc(a.title)}</b>${esc(a.message)}
+              <div class="t">${fmt.dt(a.createdAt)} &middot; ${esc(a.type)}${a.email && a.email.sent ? ' &middot; emailed' : ''}</div>
+            </div>
           </div>`
         )
-        .join('') || '<div class="item">No alerts yet</div>';
+        .join('') ||
+      `<div class="item">${sevIcon('neutral')}<div class="ib"><b>No alerts yet</b></div></div>`;
   }
 
   function feedCheck(c) {
     const feed = document.getElementById('check-feed');
     const div = document.createElement('div');
     div.className = `item ${c.ok ? 'info' : 'critical'}`;
-    div.innerHTML = `<b>${esc(c.name)}</b> ${c.ok ? `OK - HTTP ${c.httpStatus} in ${fmt.ms(c.latencyMs)}` : `FAIL - ${esc(c.error)}`}
-      <div class="t">${fmt.dt(c.checkedAt)}${c.mode !== 'live' ? ` &middot; ${c.mode}` : ''}</div>`;
+    div.innerHTML = `${sevIcon(c.ok ? 'info' : 'critical')}
+      <div class="ib">
+        <b>${esc(c.name)}</b> ${c.ok ? `OK — HTTP ${c.httpStatus} in ${fmt.ms(c.latencyMs)}` : `FAIL — ${esc(c.error)}`}
+        <div class="t">${fmt.dt(c.checkedAt)}${c.mode !== 'live' ? ` &middot; ${c.mode}` : ''}</div>
+      </div>`;
     feed.prepend(div);
     while (feed.children.length > 40) feed.removeChild(feed.lastChild);
   }

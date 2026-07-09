@@ -8,8 +8,8 @@
     window.ITM;
   let tk = chartDefaults(Chart);
 
-  // Sequential green ramp (brand) for choropleth magnitude: light -> deep
-  const SEQ = ['#ddefe5', '#b9e0c8', '#8cc9a6', '#5fae83', '#3d8f64', '#2a6f4c', '#1c4a34'];
+  // Sequential indigo ramp (brand accent) for choropleth magnitude: light -> deep
+  const SEQ = ['#e4e6fc', '#c8ccf9', '#a7adf4', '#858eee', '#6570e4', '#4a53c8', '#343b9e'];
 
   const ARROW =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>';
@@ -169,7 +169,7 @@
     const open = (s.byStatus.registered || 0) + (s.byStatus.in_progress || 0);
     document.getElementById('tiles').innerHTML = `
       <div class="tile hero">
-        <span class="corner">${ARROW}</span>
+        <a class="corner" href="/correlation.html" title="Open correlation engine">${ARROW}</a>
         <div class="l">Grievances in window</div>
         <div class="v">${fmt.n(s.total)}</div>
         <div class="delta"><span class="up">&#9650;</span> ${fmt.n(s.byStatus.resolved || 0)} resolved</div>
