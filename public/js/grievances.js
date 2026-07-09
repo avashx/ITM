@@ -173,6 +173,7 @@
         <div class="l">Grievances in window</div>
         <div class="v">${fmt.n(s.total)}</div>
         <div class="delta"><span class="up">&#9650;</span> ${fmt.n(s.byStatus.resolved || 0)} resolved</div>
+        <div class="meter"><i style="width:${s.total ? Math.round(((s.byStatus.resolved || 0) / s.total) * 100) : 0}%"></i></div>
       </div>
       <div class="tile"><div class="l">Open</div><div class="v info">${fmt.n(open)}</div><div class="delta">registered + in progress</div></div>
       <div class="tile"><div class="l">SLA breach</div><div class="v critical">${fmt.pct(s.slaBreachRate)}</div><div class="delta">resolution &gt; 30 days</div></div>

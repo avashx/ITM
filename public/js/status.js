@@ -37,6 +37,7 @@
         <div class="l">Services monitored</div>
         <div class="v">${fmt.n(s.totals.services)}</div>
         <div class="delta"><span class="up">&#9650;</span> ${okPct}% currently operational</div>
+        <div class="meter"><i style="width:${okPct}%"></i></div>
       </div>
       <div class="tile">
         <div class="l">Operational</div>
