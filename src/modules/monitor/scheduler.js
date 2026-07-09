@@ -95,7 +95,7 @@ async function checkOne(service) {
     ok: result.ok,
     httpStatus: result.httpStatus,
     latencyMs: result.latencyMs,
-    error: result.error,
+    error: result.error || result.warning || '',
     mode,
   });
   await upsertRollup(service._id, now, result);
@@ -111,8 +111,13 @@ async function checkOne(service) {
     service.state.lastUpAt = now;
     service.state.consecutiveFails = 0;
     service.state.nextCheckAt = new Date(0); // back to normal cadence
+    // A warning ("alive but unhealthy": broken cert chain / very slow) keeps
+    // the reason visible on the dashboard while ranking below a real outage.
     service.state.status =
-      result.latencyMs >= config.monitor.degradedLatencyMs ? 'degraded' : 'operational';
+      result.warning || result.latencyMs >= config.monitor.degradedLatencyMs
+        ? 'degraded'
+        : 'operational';
+    service.state.lastError = result.warning || '';
   } else {
     service.state.consecutiveFails += 1;
     const backoffIdx = Math.min(service.state.consecutiveFails, BACKOFF_MINUTES.length - 1);

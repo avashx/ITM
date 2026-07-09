@@ -23,6 +23,7 @@ router.get(
     const insights = await CorrelationInsight.find(filter)
       .sort({ createdAt: -1 })
       .limit(Math.min(parseInt(req.query.limit, 10) || 100, 500))
+      .populate('service', 'url') // so the UI can hyperlink the service mention
       .lean();
     res.json(insights);
   })

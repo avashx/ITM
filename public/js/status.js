@@ -2,7 +2,7 @@
  * active incidents, client-side search, live socket refresh. */
 (function () {
   'use strict';
-  const { api, fmt, esc, demoBanner, navActive, connectSocket, sevIcon } = window.ITM;
+  const { api, fmt, esc, slink, demoBanner, navActive, connectSocket, sevIcon } = window.ITM;
 
   const OVERALL_TEXT = {
     operational: 'All systems operational',
@@ -63,7 +63,7 @@
           (i) => `<div class="item critical">
             ${sevIcon('critical')}
             <div class="ib">
-              <b>${esc(i.service ? i.service.name : 'Unknown service')} — DOWN</b>
+              <b>${slink(i.service ? i.service.name : 'Unknown service', i.service && i.service.url)} — DOWN</b>
               ${esc(i.lastError || '')}
               <div class="t">since ${fmt.dt(i.startedAt)} &middot; ${esc(i.service ? i.service.department : '')}</div>
             </div>

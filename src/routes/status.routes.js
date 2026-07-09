@@ -117,6 +117,7 @@ router.get(
     const alerts = await Alert.find(filter)
       .sort({ createdAt: -1 })
       .limit(Math.min(parseInt(req.query.limit, 10) || 50, 200))
+      .populate('service', 'name url') // so the UI can hyperlink the service mention
       .lean();
     res.json(alerts);
   })
