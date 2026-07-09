@@ -3,7 +3,7 @@
 /* global Chart */
 (function () {
   'use strict';
-  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange } =
+  const { api, fmt, esc, slink, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange } =
     window.ITM;
   let tk = chartDefaults(Chart);
 
@@ -117,7 +117,7 @@
           <div class="head">
             <span class="spike">+${Math.round((i.spikeRatio - 1) * 100)}%</span>
             <b>${esc(i.category)}</b>
-            <span class="muted small">after ${esc(i.serviceName)} outage (${i.outage.durationHours}h)</span>
+            <span class="muted small">after ${slink(i.serviceName, i.service && i.service.url)} outage (${i.outage.durationHours}h)</span>
             <span class="pill ${i.confidence}" style="margin-left:auto">confidence: ${i.confidence}</span>
           </div>
           <p>${esc(i.narrative)}</p>
@@ -139,7 +139,9 @@
             <span class="spike violet">+${fmt.n(p.predictedExtraPerDay)}/day</span>
             <b>${esc(p.category)}</b>
             <span class="muted small">${esc(p.department)}</span>
-            <span class="pill open" style="margin-left:auto">${esc(p.serviceName)} DOWN ${p.outageOpenHours}h</span>
+            ${p.serviceUrl
+              ? `<a class="pill open" style="margin-left:auto" href="${esc(p.serviceUrl)}" target="_blank" rel="noopener" title="Open ${esc(p.serviceName)} to verify manually">${esc(p.serviceName)} DOWN ${p.outageOpenHours}h</a>`
+              : `<span class="pill open" style="margin-left:auto">${esc(p.serviceName)} DOWN ${p.outageOpenHours}h</span>`}
           </div>
           <p>${esc(p.message)}</p>
         </div>`

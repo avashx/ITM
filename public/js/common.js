@@ -175,7 +175,7 @@
    * handlers.) */
   function navActive() {
     const here = location.pathname.replace(/\/$/, '') || '/index.html';
-    document.querySelectorAll('.side-nav a').forEach((a) => {
+    document.querySelectorAll('.tn-links a').forEach((a) => {
       const target = a.getAttribute('href').replace(/\/$/, '');
       const isHome =
         (here === '' || here === '/index.html') && (target === '' || target === '/index.html');
@@ -191,8 +191,16 @@
     return d.innerHTML;
   }
 
+  /** Render a service mention as a link to the real portal (new tab), so
+   * anyone can verify a reported state manually. Falls back to plain text. */
+  function slink(name, url) {
+    return url
+      ? `<a class="slink" href="${esc(url)}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`
+      : esc(name);
+  }
+
   window.ITM = {
     api, connectSocket, tokens, chartDefaults, fmt,
-    demoBanner, navActive, esc, toggleTheme, onThemeChange, sevIcon,
+    demoBanner, navActive, esc, slink, toggleTheme, onThemeChange, sevIcon,
   };
 })();

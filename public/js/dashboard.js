@@ -3,7 +3,7 @@
 /* global Chart */
 (function () {
   'use strict';
-  const { api, fmt, esc, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange, sevIcon } =
+  const { api, fmt, esc, slink, demoBanner, navActive, connectSocket, chartDefaults, onThemeChange, sevIcon } =
     window.ITM;
   let tk = chartDefaults(Chart);
 
@@ -100,7 +100,7 @@
         .slice(0, 12)
         .map(
           (i) => `<tr>
-            <td>${esc(i.service ? i.service.name : '?')}<br><span class="muted small">${esc(i.lastError || '')}</span></td>
+            <td>${slink(i.service ? i.service.name : '?', i.service && i.service.url)}<br><span class="muted small">${esc(i.lastError || '')}</span></td>
             <td>${fmt.dt(i.startedAt)}</td>
             <td class="num">${i.durationHours != null ? i.durationHours + ' h' : '-'}</td>
             <td><span class="pill ${i.status}">${i.status}</span></td>
@@ -117,7 +117,7 @@
         .map((r) => {
           const cls = r.daysRemaining <= 7 ? 'critical' : r.daysRemaining <= 30 ? '' : 'good';
           return `<tr>
-            <td>${esc(r.name)}</td>
+            <td>${slink(r.name, r.url)}</td>
             <td class="muted">${esc(r.issuer || '-')}</td>
             <td class="num"><span class="${cls}" style="font-weight:650">${fmt.n(r.daysRemaining)}</span></td>
             <td>${r.validTo ? new Date(r.validTo).toLocaleDateString('en-IN') : '-'}</td>
@@ -134,7 +134,9 @@
           (a) => `<div class="item ${a.severity}">
             ${sevIcon(a.severity)}
             <div class="ib">
-              <b>${esc(a.title)}</b>${esc(a.message)}
+              <b>${a.service && a.service.url
+                ? `<a class="slink" href="${esc(a.service.url)}" target="_blank" rel="noopener" title="Open ${esc(a.service.name)} in a new tab">${esc(a.title)}</a>`
+                : esc(a.title)}</b>${esc(a.message)}
               <div class="t">${fmt.dt(a.createdAt)} &middot; ${esc(a.type)}${a.email && a.email.sent ? ' &middot; emailed' : ''}</div>
             </div>
           </div>`
@@ -147,9 +149,10 @@
     const feed = document.getElementById('check-feed');
     const div = document.createElement('div');
     div.className = `item ${c.ok ? 'info' : 'critical'}`;
+    const svc = services.find((s) => s._id === c.serviceId);
     div.innerHTML = `${sevIcon(c.ok ? 'info' : 'critical')}
       <div class="ib">
-        <b>${esc(c.name)}</b> ${c.ok ? `OK — HTTP ${c.httpStatus} in ${fmt.ms(c.latencyMs)}` : `FAIL — ${esc(c.error)}`}
+        <b>${slink(c.name, svc && svc.url)}</b> ${c.ok ? `OK — HTTP ${c.httpStatus} in ${fmt.ms(c.latencyMs)}` : `FAIL — ${esc(c.error)}`}
         <div class="t">${fmt.dt(c.checkedAt)}${c.mode !== 'live' ? ` &middot; ${c.mode}` : ''}</div>
       </div>`;
     feed.prepend(div);

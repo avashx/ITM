@@ -53,6 +53,7 @@ async function predictOpenOutages({ notify = false } = {}) {
         incidentId: incident._id,
         serviceId: service._id,
         serviceName: service.name,
+        serviceUrl: service.url,
         department: service.department,
         category,
         outageOpenHours: openHours,
