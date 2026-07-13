@@ -62,6 +62,51 @@
 
     <div class="tiles" id="tiles"></div>
 
+    <!-- live briefing cards for the other sections: everything visible here,
+         click to open the full page -->
+    <div class="peek-grid">
+      <div class="peek" data-href="/dashboard.html" role="link" tabindex="0" title="Open Ops Dashboard">
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Ops Dashboard
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+        </div>
+        <div class="ps">
+          <span class="s"><span class="v" id="pk-ops-inc">–</span><span class="l">Open incidents</span></span>
+          <span class="s"><span class="v" id="pk-ops-down">–</span><span class="l">Down now</span></span>
+          <span class="s"><span class="v" id="pk-ops-lat">–</span><span class="l">Avg latency</span></span>
+        </div>
+        <div class="hint" id="pk-ops-hint">latency, SSL expiry, incident history &amp; the live alert flow</div>
+      </div>
+
+      <div class="peek" data-href="/grievances.html" role="link" tabindex="0" title="Open Grievance Analytics">
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          Grievances
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+        </div>
+        <div class="ps">
+          <span class="s"><span class="v" id="pk-g-total">–</span><span class="l">30-day volume</span></span>
+          <span class="s"><span class="v" id="pk-g-sla">–</span><span class="l">SLA breach</span></span>
+          <span class="s"><span class="v" id="pk-g-res">–</span><span class="l">Resolved</span></span>
+        </div>
+        <div class="hint" id="pk-g-hint">heatmap over Delhi wards, department scorecard &amp; SLA trends</div>
+      </div>
+
+      <div class="peek" data-href="/correlation.html" role="link" tabindex="0" title="Open Correlation Engine">
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          Correlation Engine
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+        </div>
+        <div class="ps">
+          <span class="s"><span class="v" id="pk-c-preds">–</span><span class="l">Surge forecasts</span></span>
+          <span class="s"><span class="v" id="pk-c-ins">–</span><span class="l">Patterns found</span></span>
+        </div>
+        <div class="hint" id="pk-c-hint">outages overlaid on complaint volume &middot; proactive alerts</div>
+      </div>
+    </div>
+
     <section id="incidents-card" class="card" style="display:none">
       <h2>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>

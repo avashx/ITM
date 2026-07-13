@@ -35,6 +35,19 @@ async function predictOpenOutages({ notify = false } = {}) {
   const open = await Incident.find({ status: 'open' }).populate('service');
   const predictions = [];
 
+  // Batch the lookups once per call instead of per incident x category:
+  // with N open incidents this is 2 queries total rather than ~3N, which is
+  // the difference between ~0.5s and ~8s against a remote Atlas cluster.
+  const categories = [
+    ...new Set(
+      open.flatMap((i) => (i.service && i.service.relatedGrievanceCategories) || [])
+    ),
+  ];
+  const [allInsights, baselineByCategory] = await Promise.all([
+    CorrelationInsight.find({}).select('service category spikeRatio').lean(),
+    baselineDailyByCategory(categories),
+  ]);
+
   for (const incident of open) {
     const service = incident.service;
     if (!service) continue;
@@ -42,8 +55,8 @@ async function predictOpenOutages({ notify = false } = {}) {
     if (openHours < MIN_OPEN_HOURS) continue;
 
     for (const category of service.relatedGrievanceCategories || []) {
-      const ratio = await learnedRatio(service._id, category);
-      const baseline = await baselineDaily(category);
+      const ratio = learnedRatio(allInsights, service._id, category);
+      const baseline = baselineByCategory[category] || 0;
       if (baseline <= 0) continue;
 
       const extraPerDay = Math.round(baseline * (ratio - 1));
@@ -73,28 +86,36 @@ async function predictOpenOutages({ notify = false } = {}) {
   return predictions;
 }
 
-/** Elasticity from past insights: service+category -> service -> global. */
-async function learnedRatio(serviceId, category) {
-  const scoped = await CorrelationInsight.find({ service: serviceId, category })
-    .select('spikeRatio')
-    .lean();
+/** Elasticity from past insights (in-memory over one pre-fetched list):
+ * service+category -> service -> global -> default. */
+function learnedRatio(allInsights, serviceId, category) {
+  const sid = String(serviceId);
+  const scoped = allInsights.filter(
+    (i) => String(i.service) === sid && i.category === category
+  );
   if (scoped.length) return mean(scoped.map((i) => i.spikeRatio));
-  const byService = await CorrelationInsight.find({ service: serviceId })
-    .select('spikeRatio')
-    .lean();
+  const byService = allInsights.filter((i) => String(i.service) === sid);
   if (byService.length) return mean(byService.map((i) => i.spikeRatio));
-  const all = await CorrelationInsight.find({}).select('spikeRatio').lean();
-  return all.length ? mean(all.map((i) => i.spikeRatio)) : DEFAULT_RATIO;
+  return allInsights.length
+    ? mean(allInsights.map((i) => i.spikeRatio))
+    : DEFAULT_RATIO;
 }
 
-/** Trailing-28-day mean daily volume for a category. */
-async function baselineDaily(category) {
+/** Trailing-28-day mean daily volume for each category, in one query. */
+async function baselineDailyByCategory(categories) {
+  if (!categories.length) return {};
   const from = dayBucket(addDays(new Date(), -config.correlation.baselineDays));
-  const count = await Grievance.countDocuments({
-    category,
+  const docs = await Grievance.find({
+    category: { $in: categories },
     dayBucket: { $gte: from },
-  });
-  return count / config.correlation.baselineDays;
+  })
+    .select('category')
+    .lean();
+  const counts = {};
+  for (const d of docs) counts[d.category] = (counts[d.category] || 0) + 1;
+  const out = {};
+  for (const c of categories) out[c] = (counts[c] || 0) / config.correlation.baselineDays;
+  return out;
 }
 
 /** Raise at most one surge alert per incident per 12 hours. */
