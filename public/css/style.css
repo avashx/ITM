@@ -505,6 +505,48 @@ html[data-theme='dark'] .btn.primary {
 .feed .item b { display: block; font-size: 11.5px; margin-bottom: 0; }
 .feed .item .t { color: var(--muted); font-size: 10px; font-weight: 650; margin-top: 3px; font-family: var(--mono); }
 
+/* =============================================================================
+   Peek cards — live briefing of the other sections on the main page
+   ========================================================================== */
+.peek-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 10px; margin-bottom: 14px;
+}
+.peek {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 14px; padding: 12px 14px;
+  box-shadow: var(--shadow-card);
+  cursor: pointer; position: relative;
+  transition: transform .15s, border-color .15s;
+}
+.peek:hover { transform: translateY(-2px); border-color: var(--line-strong); }
+.peek .ph { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 650; }
+.peek .ph > svg { width: 14px; height: 14px; color: var(--primary); flex: none; }
+.peek .ph .arrow {
+  margin-left: auto; width: 22px; height: 22px; border-radius: 7px;
+  background: var(--surface-2); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: color .15s, background .15s;
+}
+.peek .ph .arrow svg { width: 11px; height: 11px; }
+.peek:hover .ph .arrow { color: #fff; background: var(--primary); }
+.peek .ps { display: flex; gap: 16px; margin-top: 9px; }
+.peek .ps .s .v {
+  display: block; font-size: 17px; font-weight: 700; letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums; line-height: 1.2;
+}
+.peek .ps .s .v.critical { color: var(--critical); }
+.peek .ps .s .v.good { color: var(--good); }
+.peek .ps .s .l {
+  display: block; font-size: 9px; color: var(--muted); font-weight: 650;
+  text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px;
+}
+.peek .hint {
+  margin-top: 8px; font-size: 10.5px; color: var(--muted); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
 /* service-mention hyperlinks (open the real portal in a new tab) */
 a.slink { color: var(--primary); font-weight: 700; }
 a.slink:hover { text-decoration: underline; }

@@ -75,6 +75,17 @@
       incCard.style.display = 'none';
     }
 
+    // ---- ops peek card (live numbers straight from this summary) ----
+    const avgLat = (() => {
+      const vals = s.categories.flatMap((c) =>
+        c.services.map((x) => x.latencyMs).filter((v) => v != null)
+      );
+      return vals.length ? Math.round(vals.reduce((a, v) => a + v, 0) / vals.length) : null;
+    })();
+    setPeek('pk-ops-inc', fmt.n(s.activeIncidents.length), s.activeIncidents.length ? 'critical' : 'good');
+    setPeek('pk-ops-down', fmt.n(s.totals.down), s.totals.down ? 'critical' : 'good');
+    setPeek('pk-ops-lat', fmt.ms(avgLat));
+
     const catsEl = document.getElementById('categories');
     catsEl.innerHTML = s.categories
       .map(
@@ -116,6 +127,48 @@
     if (row && row.dataset.url) window.open(row.dataset.url, '_blank', 'noopener');
   });
 
+  function setPeek(id, text, cls) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    el.classList.remove('critical', 'good');
+    if (cls) el.classList.add(cls);
+  }
+
+  /** Grievance + correlation briefing numbers (fetched once per page view;
+   * light queries, no need to refresh on every check cycle). */
+  async function loadPeeks() {
+    try {
+      const [g, preds, ins] = await Promise.all([
+        api('/api/grievances/stats/summary?days=30'),
+        api('/api/correlation/predictions'),
+        api('/api/correlation/insights?limit=100'),
+      ]);
+      setPeek('pk-g-total', fmt.n(g.total));
+      setPeek('pk-g-sla', fmt.pct(g.slaBreachRate), g.slaBreachRate > 10 ? 'critical' : 'good');
+      setPeek('pk-g-res', fmt.n(g.byStatus.resolved || 0), 'good');
+      setPeek('pk-c-preds', fmt.n(preds.length), preds.length ? 'critical' : undefined);
+      setPeek('pk-c-ins', ins.length >= 100 ? '100+' : fmt.n(ins.length));
+      if (preds.length) {
+        document.getElementById('pk-c-hint').textContent = preds[0].message;
+      } else if (ins.length) {
+        document.getElementById('pk-c-hint').textContent = ins[0].narrative;
+      }
+    } catch {
+      /* peeks are decorative - never block the status page on them */
+    }
+  }
+
+  // Whole peek card navigates to its section (internal, same tab)
+  document.querySelectorAll('.peek[data-href]').forEach((card) => {
+    card.addEventListener('click', () => {
+      window.location.href = card.dataset.href;
+    });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') window.location.href = card.dataset.href;
+    });
+  });
+
   /* ---- client-side search over service rows ---- */
   function applySearch() {
     const q = (document.getElementById('svc-search')?.value || '').trim().toLowerCase();
@@ -134,6 +187,7 @@
   load().catch((e) => {
     document.getElementById('overall-text').textContent = `Failed to load status: ${e.message}`;
   });
+  loadPeeks();
   document.getElementById('svc-search')?.addEventListener('input', applySearch);
 
   const socket = connectSocket();
