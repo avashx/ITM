@@ -809,3 +809,152 @@ footer.foot {
 .ai-note { font-size: 9.5px; color: var(--muted); text-align: center; margin-top: 8px; font-weight: 550; }
 
 @media (max-width: 640px) { .ai-panel { width: 100vw; } }
+
+/* =============================================================================
+   Command Center — full-bleed map canvas with floating, draggable glass cards
+   (grievances.html). The map is the background; every panel hovers over it.
+   ========================================================================== */
+body.cmd { overflow: hidden; }
+body.cmd .main { display: none; }
+
+#map.cc-map {
+  position: fixed; inset: 0; z-index: 0;
+  width: 100vw; height: 100vh;
+  border: none; border-radius: 0;
+  background: var(--page);
+}
+/* dim + tint the basemap so the glass cards read cleanly on top */
+#map.cc-map::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 400;
+  background:
+    radial-gradient(1100px 620px at 20% 0%, rgba(124, 92, 255, 0.20), transparent 62%),
+    linear-gradient(180deg, rgba(10, 10, 15, 0.55), rgba(10, 10, 15, 0.25) 40%, rgba(10, 10, 15, 0.72));
+}
+html[data-theme='light'] #map.cc-map::after {
+  background:
+    radial-gradient(1100px 620px at 20% 0%, rgba(124, 92, 255, 0.10), transparent 62%),
+    linear-gradient(180deg, rgba(244, 245, 249, 0.35), transparent 45%, rgba(244, 245, 249, 0.55));
+}
+
+/* the layer that holds the floating cards (clicks pass through to the map) */
+.cc-layer {
+  position: fixed; inset: 74px 22px 18px 22px; z-index: 500;
+  pointer-events: none;
+}
+.cc-card {
+  position: absolute; pointer-events: auto;
+  background: var(--surface);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-pop);
+  animation: rise .5s cubic-bezier(0.22, 0.9, 0.35, 1) both;
+}
+.cc-card.dragging { transition: none; box-shadow: 0 28px 60px -14px rgba(0,0,0,.7); border-color: var(--primary); }
+
+/* card chrome: grab handle + collapse */
+.cc-hd {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; cursor: grab; user-select: none;
+  border-bottom: 1px solid var(--line);
+}
+.cc-hd:active { cursor: grabbing; }
+.cc-hd .t { font-size: 11.5px; font-weight: 700; letter-spacing: -0.1px; }
+.cc-hd .t svg { width: 13px; height: 13px; color: var(--primary); vertical-align: -2px; margin-right: 5px; }
+.cc-hd .n {
+  font-family: var(--mono); font-size: 9.5px; font-weight: 700; color: var(--muted);
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: 6px; padding: 1px 6px;
+}
+.cc-hd .grip { margin-left: auto; display: flex; gap: 2px; color: var(--muted); }
+.cc-hd .grip button {
+  width: 22px; height: 22px; border-radius: 6px; cursor: pointer;
+  border: none; background: transparent; color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+}
+.cc-hd .grip button:hover { background: var(--surface-2); color: var(--ink); }
+.cc-hd .grip svg { width: 12px; height: 12px; }
+.cc-bd { padding: 12px; }
+.cc-card.collapsed .cc-bd { display: none; }
+.cc-card.collapsed { width: auto !important; }
+
+/* KPI strip (top-left, like the reference's Comments / Emotion / Age cards) */
+.cc-kpis { display: flex; gap: 10px; }
+.cc-kpi {
+  pointer-events: auto;
+  flex: 1; min-width: 132px;
+  background: var(--surface);
+  backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid var(--line); border-radius: 14px;
+  padding: 11px 13px; position: relative; overflow: hidden;
+  box-shadow: var(--shadow-pop);
+}
+.cc-kpi::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, var(--primary), var(--info));
+}
+.cc-kpi .l { font-size: 10.5px; color: var(--ink-2); font-weight: 600; }
+.cc-kpi .v {
+  font-size: 22px; font-weight: 750; letter-spacing: -0.8px; margin-top: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.cc-kpi .v.good { color: var(--good); }
+.cc-kpi .v.critical { color: var(--critical); }
+.cc-kpi .v.warn { color: var(--warning); }
+.cc-kpi .s { font-size: 9.5px; color: var(--muted); font-weight: 600; margin-top: 1px; }
+
+/* segmented control (State / County / ZIP in the reference) */
+.cc-seg { display: flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; padding: 2px; }
+.cc-seg button {
+  flex: 1; border: none; background: transparent; cursor: pointer;
+  color: var(--muted); font-family: inherit; font-size: 10.5px; font-weight: 650;
+  padding: 5px 8px; border-radius: 7px; white-space: nowrap;
+}
+.cc-seg button.on { background: var(--surface-solid); color: var(--ink); box-shadow: var(--shadow-card); }
+
+.cc-row { display: flex; align-items: center; gap: 8px; margin-top: 9px; }
+.cc-row label { font-size: 9.5px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--muted); }
+.cc-row select {
+  flex: 1; min-width: 0; background: var(--surface-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px;
+  font-family: inherit; font-size: 11px; font-weight: 600; outline: none;
+}
+.cc-row select:focus { border-color: var(--primary); }
+
+.cc-scale { display: flex; height: 7px; border-radius: 99px; overflow: hidden; margin-top: 9px; }
+.cc-scale i { flex: 1; }
+.cc-scale-lbl { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+
+.cc-legend { display: flex; flex-direction: column; gap: 5px; margin-top: 9px; }
+.cc-legend .li { display: flex; align-items: center; gap: 7px; font-size: 10.5px; color: var(--ink-2); font-weight: 600; }
+.cc-legend .li .sw { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+.cc-legend .li .n { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+.cc-chart { position: relative; }
+.cc-reset {
+  position: fixed; left: 22px; bottom: 18px; z-index: 600; pointer-events: auto;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  border-radius: 999px; padding: 7px 13px; cursor: pointer;
+  font-family: inherit; font-size: 10.5px; font-weight: 650;
+  box-shadow: var(--shadow-card);
+}
+.cc-reset:hover { color: var(--ink); border-color: var(--primary); }
+
+/* Leaflet chrome tuned for the dark canvas */
+body.cmd .leaflet-control-zoom { display: none; }
+body.cmd .leaflet-control-attribution {
+  background: rgba(10, 10, 15, 0.55) !important; color: var(--muted) !important;
+  backdrop-filter: blur(8px); border-radius: 8px 0 0 0; font-size: 9px !important;
+}
+body.cmd .leaflet-control-attribution a { color: var(--ink-2) !important; }
+
+@media (max-width: 1180px) {
+  .cc-layer { position: static; padding: 0; pointer-events: auto; }
+  body.cmd { overflow: auto; }
+  .cc-map { position: fixed; opacity: .35; }
+  .cc-card { position: relative !important; left: auto !important; top: auto !important; width: auto !important; margin: 0 0 12px; }
+  #map.cc-map { position: fixed; }
+  .cc-kpis { flex-wrap: wrap; }
+}
