@@ -72,6 +72,13 @@ const config = {
 
   adminKey: process.env.ADMIN_API_KEY || '',
 
+  // Assistant panel. Without a key the panel still works, answering from live
+  // data with the deterministic responder (see src/services/assistant.js).
+  assistant: {
+    apiKey: process.env.ANTHROPIC_API_KEY || '',
+    model: process.env.ASSISTANT_MODEL || 'claude-opus-4-8',
+  },
+
   external: {
     dataGovInKey: process.env.DATA_GOV_IN_API_KEY || '',
     maptilerKey: process.env.MAPTILER_KEY || '',

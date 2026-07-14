@@ -109,7 +109,35 @@ deployments should switch to a provider:
 
 *(Carto basemaps are another free option for non-commercial use - attribution required.)*
 
-## 5. Admin API guard (`ADMIN_API_KEY`)
+## 5. Assistant panel — Anthropic API (`ANTHROPIC_API_KEY`, optional)
+
+The in-app **Operations Assistant** answers questions about the platform's own
+live data (what's down, certificate expiry, SLA breaches, correlation patterns).
+
+**It works with no key at all.** Without `ANTHROPIC_API_KEY`, a deterministic
+rule-based responder answers the same questions from the same live snapshot, and
+the UI labels every reply "Rule-based · live data". That is the zero-budget
+default and is genuinely useful — no stub.
+
+With a key, the same questions are answered free-form by Claude, grounded in a
+server-built snapshot of the current database (the model is never asked to recall
+facts about Delhi from memory). Replies are labelled "Claude · <model>".
+
+1. Get a key: <https://console.anthropic.com> → API Keys.
+2. `.env`:
+   ```ini
+   ANTHROPIC_API_KEY=sk-ant-...
+   ASSISTANT_MODEL=claude-opus-4-8   # optional; this is the default
+   ```
+
+**Cost:** this is the one component with no free tier — Anthropic bills per token.
+Each question sends a small snapshot (a few KB) plus the question, so a query costs
+a fraction of a paisa; a demo session is negligible. There is no monthly minimum,
+and if the key is absent or the API call fails, the panel silently falls back to
+the rule-based responder — the platform never breaks or blocks on it. Leave the key
+unset to keep the project strictly zero-cost.
+
+## 6. Admin API guard (`ADMIN_API_KEY`)
 
 Not an external service - a shared secret you generate yourself:
 

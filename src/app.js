@@ -51,6 +51,7 @@ app.use('/api/services', require('./routes/services.routes'));
 app.use('/api/status', require('./routes/status.routes'));
 app.use('/api/grievances', require('./routes/grievances.routes'));
 app.use('/api/correlation', require('./routes/correlation.routes'));
+app.use('/api/assistant', require('./routes/assistant.routes'));
 app.use('/api/meta', require('./routes/meta.routes'));
 // Back-compat alias so /api/health works (documented in API.md)
 app.get('/api/health', (req, res, next) => {

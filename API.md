@@ -163,6 +163,27 @@ nightly cron. Returns `{ created, insights }`. Idempotent per incident+category.
 
 ---
 
+## Assistant (grounded Q&A over the platform's own data)
+
+### `GET /api/assistant/meta`
+Panel bootstrap: `{ mode: "claude"|"rules", model, suggested: [...] }`.
+`mode` reflects whether `ANTHROPIC_API_KEY` is configured.
+
+### `POST /api/assistant/ask`
+`{ "question": "What's down right now?" }` ->
+`{ answer, mode: "claude"|"rules", model?, note?, contextAt }`
+
+Answers are grounded in a server-built snapshot of the **current** database
+(service states, open incidents, SSL expiry, 30-day grievance stats, correlation
+insights, live surge forecasts). With a key, Claude summarises that snapshot;
+without one, a deterministic responder answers from it. `mode` is surfaced in the
+UI on every reply so the source is never ambiguous. If the Claude call fails, the
+response falls back to `mode: "rules"` with a `note` explaining why.
+
+### `GET /api/assistant/context`
+The exact snapshot answers are grounded in — useful for debugging and for
+verifying that nothing is invented.
+
 ## Socket.io events (server -> client)
 
 Connect with the standard client (served at `/socket.io/socket.io.js`); no auth
