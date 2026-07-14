@@ -114,6 +114,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color .3s ease, color .3s ease;
 }
 a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -247,6 +248,7 @@ html[data-theme='dark'] .icon-btn .ic-moon { display: none; }
   box-shadow: var(--shadow-card);
   padding: 14px 16px;
   margin-bottom: 14px;
+  transition: background-color .3s ease, border-color .3s ease;
 }
 .card h2 {
   font-size: 12.5px; font-weight: 650; letter-spacing: -0.1px;
@@ -269,7 +271,22 @@ html[data-theme='dark'] .icon-btn .ic-moon { display: none; }
   border-radius: 14px; padding: 12px 14px 11px;
   box-shadow: var(--shadow-card);
   position: relative; overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .3s ease, border-color .3s ease;
 }
+.tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+/* tinted icon square (top-right), à la govt dashboard stat cards */
+.tile .ti {
+  position: absolute; top: 11px; right: 11px;
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.tile .ti svg { width: 15px; height: 15px; }
+.tile .ti.good { background: var(--good-bg); color: var(--good); }
+.tile .ti.warn { background: var(--warning-bg); color: var(--warning); }
+.tile .ti.critical { background: var(--critical-bg); color: var(--critical); }
+.tile .ti.info { background: var(--info-bg); color: var(--info); }
+.tile .ti.violet { background: var(--violet-bg); color: var(--violet); }
+.tile .ti.neutral { background: var(--surface-2); color: var(--muted); }
 .tile .l { color: var(--ink-2); font-size: 11px; font-weight: 600; }
 .tile .v {
   font-size: 24px; font-weight: 700;
@@ -597,6 +614,37 @@ html[data-theme='dark'] a.pill:hover { filter: brightness(1.15); }
 }
 
 .attrib { color: var(--muted); font-size: 10.5px; font-weight: 550; margin-top: 10px; }
+
+/* =============================================================================
+   Motion — staggered entrance, honoring reduced-motion
+   ========================================================================== */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.overall, .tiles .tile, .peek, .card, .svc-group, .filters {
+  animation: rise .45s cubic-bezier(0.22, 0.9, 0.35, 1) both;
+}
+.overall { animation-delay: 0.02s; }
+.tiles .tile:nth-child(1) { animation-delay: 0.04s; }
+.tiles .tile:nth-child(2) { animation-delay: 0.08s; }
+.tiles .tile:nth-child(3) { animation-delay: 0.12s; }
+.tiles .tile:nth-child(4) { animation-delay: 0.16s; }
+.tiles .tile:nth-child(5) { animation-delay: 0.20s; }
+.tiles .tile:nth-child(6) { animation-delay: 0.24s; }
+.peek:nth-child(1) { animation-delay: 0.14s; }
+.peek:nth-child(2) { animation-delay: 0.20s; }
+.peek:nth-child(3) { animation-delay: 0.26s; }
+.card { animation-delay: 0.16s; }
+.svc-group { animation-delay: 0.20s; }
+.feed .item, .insight { animation: rise .35s cubic-bezier(0.22, 0.9, 0.35, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 /* =============================================================================
    Footer & responsive

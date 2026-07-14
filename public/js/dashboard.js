@@ -27,10 +27,10 @@
         <div class="delta">${nInc ? '<span class="up">&#9650;</span> teams alerted automatically' : 'all services responding'}</div>
         <div class="meter"><i style="width:${s.totals.services ? Math.round((s.totals.operational / s.totals.services) * 100) : 0}%"></i></div>
       </div>
-      <div class="tile"><div class="l">Services</div><div class="v">${fmt.n(s.totals.services)}</div><div class="delta">under 5-min watch</div></div>
-      <div class="tile"><div class="l">Operational</div><div class="v good">${fmt.n(s.totals.operational)}</div><div class="delta">healthy responses</div></div>
-      <div class="tile"><div class="l">Down</div><div class="v critical">${fmt.n(s.totals.down)}</div><div class="delta">3+ straight failures</div></div>
-      <div class="tile"><div class="l">Avg latency</div><div class="v info">${fmt.ms(Math.round(avgLat || 0))}</div><div class="delta">last check cycle</div></div>`;
+      <div class="tile"><span class="ti neutral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span><div class="l">Services</div><div class="v">${fmt.n(s.totals.services)}</div><div class="delta">under 5-min watch</div></div>
+      <div class="tile"><span class="ti good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><div class="l">Operational</div><div class="v good">${fmt.n(s.totals.operational)}</div><div class="delta">healthy responses</div></div>
+      <div class="tile"><span class="ti critical"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></span><div class="l">Down</div><div class="v critical">${fmt.n(s.totals.down)}</div><div class="delta">3+ straight failures</div></div>
+      <div class="tile"><span class="ti info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><div class="l">Avg latency</div><div class="v info">${fmt.ms(Math.round(avgLat || 0))}</div><div class="delta">last check cycle</div></div>`;
   }
 
   async function loadServices() {

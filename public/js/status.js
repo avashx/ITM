@@ -40,16 +40,19 @@
         <div class="meter"><i style="width:${okPct}%"></i></div>
       </div>
       <div class="tile">
+        <span class="ti good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
         <div class="l">Operational</div>
         <div class="v good">${fmt.n(s.totals.operational)}</div>
         <div class="delta">healthy responses</div>
       </div>
       <div class="tile">
+        <span class="ti warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
         <div class="l">Degraded</div>
         <div class="v warn">${fmt.n(s.totals.degraded)}</div>
         <div class="delta">slow &gt; 4s latency</div>
       </div>
       <div class="tile">
+        <span class="ti critical"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></span>
         <div class="l">Down</div>
         <div class="v critical">${fmt.n(s.totals.down)}</div>
         <div class="delta">${s.activeIncidents.length ? `<span class="down">&#9650;</span> ${s.activeIncidents.length} open incident(s)` : 'no open incidents'}</div>
