@@ -17,6 +17,9 @@ one Node.js app:
 3. **Correlation engine** (the differentiator) - links service outages to complaint
    spikes (trailing-28-day baseline, Poisson z-score); predicts surges from live
    outages and alerts departments proactively.
+4. **Assistant (RAG chat)** - natural-language chat drawer on every page,
+   answering only from this platform's own data via three retrieval lanes
+   (live state / exact DB aggregate / vector search over an embedded corpus).
 
 Owner: Aman Vashishth (intern, IT Dept, GNCTD). Solo project, zero budget - free
 tiers and open source only. Stack: Node >= 18 CommonJS, Express, Mongoose, Socket.io,
@@ -31,6 +34,8 @@ npm run seed                  # FULL DEMO: wipes monitor history + synthetic gri
                               #   + 3 fabricated outage scenarios + insights
 npm run seed:endpoints        # PRODUCTION: catalogue only, upsert by URL, keeps history
 npm run seed:grievances       # synthetic grievances only (doesn't touch monitor data)
+npm run rag:index             # build/refresh the assistant's vector index
+                              #   (incremental; --dry to price it, --force to redo)
 npm run verify:endpoints      # one-shot real HTTP probe of the 85-URL catalogue
 SIMULATE_CHECKS=true npm start  # demo mode - NO real traffic to govt servers
 npm start                     # real monitoring (default)
@@ -50,7 +55,10 @@ src/modules/monitor/          checker (raw http/https probe), simulator, schedul
 src/modules/grievance/        classifier (keyword NLP), sla, analytics
 src/modules/correlation/      engine (spike detection), predictor (surge forecast)
 src/routes/                   *.routes.js per module + meta (geo layers, config, health)
-src/services/                 socket.js (emit-safe hub), mailer.js (nodemailer)
+src/services/                 socket.js (emit-safe hub), mailer.js (nodemailer),
+                              llm.js (provider layer), assistant.js (chat + prompt)
+src/services/rag/             chunker (corpus), indexer (embed+upsert),
+                              store (in-process vector search), retriever (3 lanes)
 public/                       4 static pages + js/ per page + css/style.css
 data/endpoints.json           THE endpoint catalogue (source of truth; ENDPOINTS.md
                               table is generated from it)
@@ -80,6 +88,14 @@ docs/                         EXECUTIVE_BRIEF, RESEARCH_FINDINGS, screenshots/
 6. **Timezone:** all cron + day-bucketing is IST (`TZ=Asia/Kolkata`). Day buckets are
    `YYYY-MM-DD` strings computed at write time (`src/utils/dates.js`) - group on them,
    don't re-derive dates in queries.
+7. **The assistant never computes a statistic.** Every number in an answer must come
+   from the structured lane (a MongoDB aggregate) or the live snapshot, and the
+   system prompt says so. If you add a metric the assistant should be able to quote,
+   add it to `computeAggregate()` in `src/services/rag/retriever.js` - do NOT relax
+   the prompt and let the model do arithmetic over retrieved passages.
+8. **The assistant degrades, never breaks.** OpenAI -> Anthropic -> deterministic
+   responder, and the UI labels which one answered on every single reply. Never let
+   a rule-based answer render as if it were AI, and never let a missing key 500.
 
 ## Gotchas learned the hard way
 

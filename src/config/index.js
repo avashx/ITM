@@ -72,11 +72,47 @@ const config = {
 
   adminKey: process.env.ADMIN_API_KEY || '',
 
-  // Assistant panel. Without a key the panel still works, answering from live
-  // data with the deterministic responder (see src/services/assistant.js).
+  // Assistant / RAG chat. Provider is picked automatically: OpenAI first (it
+  // is the only one of the two that also serves embeddings, so it unlocks the
+  // vector-retrieval lane), then Anthropic, then the deterministic responder.
+  // With no key at all the panel STILL works - see src/services/assistant.js.
   assistant: {
-    apiKey: process.env.ANTHROPIC_API_KEY || '',
-    model: process.env.ASSISTANT_MODEL || 'claude-opus-4-8',
+    // 'auto' | 'openai' | 'anthropic' | 'rules' - forces a provider for demos
+    provider: (process.env.ASSISTANT_PROVIDER || 'auto').toLowerCase(),
+    openaiKey: process.env.OPENAI_API_KEY || '',
+    // gpt-4.1-mini is the default: cheap, fast first token, reliable at
+    // "answer only from this context". gpt-5-mini / gpt-4.1-nano also work.
+    openaiModel: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
+    anthropicKey: process.env.ANTHROPIC_API_KEY || '',
+    anthropicModel: process.env.ANTHROPIC_MODEL || process.env.ASSISTANT_MODEL || 'claude-opus-4-8',
+    temperature: float(process.env.ASSISTANT_TEMPERATURE, 0.2),
+    // Only sent to reasoning models (gpt-5*); keeps latency low by default.
+    reasoningEffort: process.env.ASSISTANT_REASONING_EFFORT || 'minimal',
+    maxTokens: int(process.env.ASSISTANT_MAX_TOKENS, 700),
+    // How many prior turns of the conversation are replayed to the model.
+    historyTurns: int(process.env.ASSISTANT_HISTORY_TURNS, 6),
+    requestTimeoutMs: int(process.env.ASSISTANT_TIMEOUT_MS, 30000),
+  },
+
+  // Retrieval-augmented generation over the platform's own corpus.
+  rag: {
+    enabled: bool(process.env.RAG_ENABLED, true),
+    // text-embedding-3-small supports Matryoshka truncation: 256 dims keeps
+    // recall high while cutting index size ~6x vs the native 1536.
+    embedModel: process.env.RAG_EMBED_MODEL || 'text-embedding-3-small',
+    embedDims: int(process.env.RAG_EMBED_DIMS, 256),
+    embedBatch: int(process.env.RAG_EMBED_BATCH, 96),
+    // Chunks handed to the model per answer, after MMR diversification.
+    topK: int(process.env.RAG_TOP_K, 8),
+    // Wider net pulled from the vector index before re-ranking down to topK.
+    candidateK: int(process.env.RAG_CANDIDATE_K, 40),
+    // Cosine floor - below this a chunk is treated as irrelevant, so an
+    // off-topic question retrieves nothing and the model must say so.
+    minScore: float(process.env.RAG_MIN_SCORE, 0.18),
+    // Embed individual grievance records as well as the cluster summaries.
+    indexRecords: bool(process.env.RAG_INDEX_RECORDS, true),
+    // Build the index on boot when the collection is empty (first deploy).
+    autoBuild: bool(process.env.RAG_AUTO_BUILD, true),
   },
 
   external: {

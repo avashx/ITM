@@ -163,26 +163,72 @@ nightly cron. Returns `{ created, insights }`. Idempotent per incident+category.
 
 ---
 
-## Assistant (grounded Q&A over the platform's own data)
+## Assistant (RAG chat over the platform's own data)
+
+Every answer is assembled at request time from three retrieval lanes and the
+model is instructed to use nothing else:
+
+| Lane | Source | What it supplies |
+|---|---|---|
+| **live** | current DB state, never indexed | what's down now, open incidents, SSL expiry, active surge forecasts |
+| **structured** | exact aggregate computed by MongoDB | counts, percentages, per-department/district breach rates — the numbers the model quotes verbatim instead of deriving |
+| **vector** | embedded corpus (`ragchunks`) | SLA policy, department taxonomy, service catalogue, complaint themes, correlation findings, documentation |
+
+The structured lane is what keeps numbers honest: a count is computed by the
+database and handed over, so the model reads a figure rather than inventing one.
 
 ### `GET /api/assistant/meta`
-Panel bootstrap: `{ mode: "claude"|"rules", model, suggested: [...] }`.
-`mode` reflects whether `ANTHROPIC_API_KEY` is configured.
+Panel bootstrap:
+```json
+{ "mode": "rag"|"rules", "provider": "openai"|"anthropic"|null, "model": "gpt-4.1-mini",
+  "retrieval": { "vectorLane": true, "structuredLane": true, "liveLane": true,
+                 "index": { "chunks": 13161, "byKind": {...}, "builtAt": "...", "dims": 256 } },
+  "suggested": ["What's down right now?", "..."] }
+```
+
+### `POST /api/assistant/chat` *(streaming)*
+`{ "messages": [{ "role": "user", "content": "Which department has the worst SLA?" }] }`
+
+Responds as **Server-Sent Events**:
+
+| Event | Payload |
+|---|---|
+| `token` | `{ text }` — one fragment of the answer |
+| `done` | the full result (below) |
+| `error` | `{ error }` |
+
+Send the whole conversation in `messages` (max 24, last one must be `user`,
+question ≤ 500 chars) — follow-ups are resolved against the previous turn.
 
 ### `POST /api/assistant/ask`
-`{ "question": "What's down right now?" }` ->
-`{ answer, mode: "claude"|"rules", model?, note?, contextAt }`
+Same answer, non-streaming. Accepts `{ question }` or `{ messages }`:
+```json
+{ "answer": "...", "mode": "rag", "provider": "openai", "model": "gpt-4.1-mini",
+  "sources": [{ "n": 1, "kind": "cluster", "title": "...", "citation": "...",
+                "dataSource": "synthetic", "score": 0.74 }],
+  "metrics": { "retrievalMs": 380, "generationMs": 900, "totalMs": 1280,
+               "chunksSearched": 13161, "recordsAggregated": 1344 },
+  "grounding": { "filters": { "district": "North West" },
+                 "matched": ["district = North West"] } }
+```
+If the LLM call fails, the response degrades to `mode: "rules"` with a `note`
+explaining why — the panel never breaks on a dead or out-of-credit key.
 
-Answers are grounded in a server-built snapshot of the **current** database
-(service states, open incidents, SSL expiry, 30-day grievance stats, correlation
-insights, live surge forecasts). With a key, Claude summarises that snapshot;
-without one, a deterministic responder answers from it. `mode` is surfaced in the
-UI on every reply so the source is never ambiguous. If the Claude call fails, the
-response falls back to `mode: "rules"` with a `note` explaining why.
+### `GET /api/assistant/retrieve?q=...`
+**Retrieval only, no generation.** Returns the exact passages, filters and
+aggregate a question would be answered from, with per-lane timings. This is the
+endpoint to reach for when an answer looks wrong — it shows whether the fault
+was retrieval or generation.
 
 ### `GET /api/assistant/context`
-The exact snapshot answers are grounded in — useful for debugging and for
-verifying that nothing is invented.
+The live snapshot on its own.
+
+### `GET /api/assistant/index`
+Vector index health: `{ chunks, byKind, builtAt, embedModel, dims, loaded }`.
+
+### `POST /api/assistant/index/rebuild?force=true` *(admin)*
+Re-embed the corpus. Admin-guarded because it spends money on the embeddings
+API. Incremental unless `force=true`. The CLI equivalent is `npm run rag:index`.
 
 ## Socket.io events (server -> client)
 

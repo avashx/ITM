@@ -9,6 +9,7 @@
     "seed": "node scripts/seed-demo.js",
     "seed:endpoints": "node scripts/seed-endpoints.js",
     "seed:grievances": "node scripts/seed-grievances.js",
+    "rag:index": "node scripts/build-rag-index.js",
     "verify:endpoints": "node scripts/verify-endpoints.js",
     "fetch:geodata": "node scripts/fetch-geodata.js"
   },

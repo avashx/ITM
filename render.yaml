@@ -29,6 +29,15 @@ services:
         value: "true"
       - key: ADMIN_API_KEY
         generateValue: true
+      # Assistant chat + RAG. Paste your OpenAI key in the dashboard to enable
+      # AI answers with semantic search; without it the assistant still answers
+      # from live data with the deterministic responder. On the first boot with
+      # a key set, the vector index builds itself once (~$0.02, ~4 min) - see
+      # RAG_AUTO_BUILD in .env.example.
+      - key: OPENAI_API_KEY
+        sync: false # secret - paste in the dashboard, never commit it
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
       # Optional email alerts - set in the dashboard if wanted (see API_KEYS.md)
       - key: SMTP_HOST
         sync: false

@@ -772,6 +772,42 @@ footer.foot {
 .ai-msg .src .d { width: 5px; height: 5px; border-radius: 50%; background: var(--primary); }
 .ai-msg .src.rules .d { background: var(--muted); }
 
+/* Provenance under an answer: timing split, the filters the exact aggregate
+   applied, and the retrieved passages behind the [n] citations. */
+.ai-metrics {
+  font-size: 9.5px; font-weight: 600; color: var(--muted);
+  font-family: var(--mono, ui-monospace, monospace); margin-top: 3px;
+}
+.ai-filters { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.ai-filters span {
+  font-size: 9.5px; font-weight: 650; padding: 2px 7px; border-radius: 999px;
+  background: var(--primary-soft); color: var(--primary);
+  white-space: nowrap;
+}
+.ai-sources { margin-top: 7px; }
+.ai-sources summary {
+  cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; color: var(--ink-2);
+  border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px;
+}
+.ai-sources summary::-webkit-details-marker { display: none; }
+.ai-sources summary::before { content: '▸'; font-size: 9px; }
+.ai-sources[open] summary::before { content: '▾'; }
+.ai-sources summary:hover { color: var(--ink); border-color: var(--primary); }
+.ai-sources ol {
+  margin: 7px 0 0; padding-left: 20px;
+  font-size: 10.5px; line-height: 1.5; color: var(--ink-2);
+}
+.ai-sources li { margin-bottom: 4px; }
+.ai-sources li b {
+  font-size: 9px; text-transform: uppercase; letter-spacing: .3px;
+  color: var(--primary); margin-right: 4px; font-weight: 700;
+}
+.ai-sources li em {
+  display: block; font-style: normal; font-size: 9px; color: var(--muted);
+  font-family: var(--mono, ui-monospace, monospace);
+}
+
 .ai-typing { display: flex; gap: 4px; padding: 4px 2px; }
 .ai-typing i {
   width: 6px; height: 6px; border-radius: 50%; background: var(--muted);

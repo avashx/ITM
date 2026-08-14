@@ -7,4 +7,5 @@ module.exports = {
   Grievance: require('./Grievance'),
   Alert: require('./Alert'),
   CorrelationInsight: require('./CorrelationInsight'),
+  RagChunk: require('./RagChunk'),
 };

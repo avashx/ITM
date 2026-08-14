@@ -35,6 +35,13 @@ async function main() {
   monitorScheduler.start();
   correlationScheduler.start();
 
+  // Warm the assistant's vector index, building it once if this is a fresh
+  // deployment. Deliberately not awaited: the server is already serving, and
+  // the assistant degrades to its structured + live lanes until this lands.
+  require('./src/services/rag/indexer')
+    .ensureIndex()
+    .catch((err) => log.warn(`vector index unavailable: ${err.message}`));
+
   // Graceful shutdown (PM2 reload / Ctrl-C)
   const shutdown = async (signal) => {
     log.info(`${signal} received - shutting down`);

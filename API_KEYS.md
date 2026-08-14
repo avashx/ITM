@@ -109,33 +109,70 @@ deployments should switch to a provider:
 
 *(Carto basemaps are another free option for non-commercial use - attribution required.)*
 
-## 5. Assistant panel — Anthropic API (`ANTHROPIC_API_KEY`, optional)
+## 5. Assistant chat + RAG — OpenAI API (`OPENAI_API_KEY`, optional)
 
-The in-app **Operations Assistant** answers questions about the platform's own
-live data (what's down, certificate expiry, SLA breaches, correlation patterns).
+The in-app **Operations Assistant** is a chat drawer on every page. It answers
+free-form questions about this platform's own data — what's down, certificate
+expiry, complaint volumes by department or district, what counts as an SLA
+breach, correlation patterns — and it retrieves before it answers.
 
-**It works with no key at all.** Without `ANTHROPIC_API_KEY`, a deterministic
-rule-based responder answers the same questions from the same live snapshot, and
-the UI labels every reply "Rule-based · live data". That is the zero-budget
-default and is genuinely useful — no stub.
+**It works with no key at all.** With no key, a deterministic rule-based
+responder answers the same questions from the same live data and the UI labels
+every reply "Rule-based · live data". That is the zero-budget default and is
+genuinely useful — no stub.
 
-With a key, the same questions are answered free-form by Claude, grounded in a
-server-built snapshot of the current database (the model is never asked to recall
-facts about Delhi from memory). Replies are labelled "Claude · <model>".
+**Degradation is layered, so the panel is never dead:**
 
-1. Get a key: <https://console.anthropic.com> → API Keys.
+| Configured | Mode | What you get |
+|---|---|---|
+| `OPENAI_API_KEY` | full RAG | semantic search over the indexed corpus + exact DB aggregate + live state |
+| `ANTHROPIC_API_KEY` only | RAG minus vectors | exact DB aggregate + live state (no embeddings provider) |
+| neither | rule-based | deterministic answers from the same data, labelled as such |
+
+1. Get a key: <https://platform.openai.com/api-keys>.
 2. `.env`:
    ```ini
-   ANTHROPIC_API_KEY=sk-ant-...
-   ASSISTANT_MODEL=claude-opus-4-8   # optional; this is the default
+   OPENAI_API_KEY=sk-...
+   OPENAI_MODEL=gpt-4.1-mini   # optional; this is the default
    ```
+3. Build the retrieval index once:
+   ```bash
+   npm run rag:index          # incremental; safe to re-run
+   npm run rag:index -- --dry # show the corpus and cost, spend nothing
+   ```
+   On a fresh deploy the server builds it automatically on first boot
+   (`RAG_AUTO_BUILD=true`), so Render needs nothing but the key.
 
-**Cost:** this is the one component with no free tier — Anthropic bills per token.
-Each question sends a small snapshot (a few KB) plus the question, so a query costs
-a fraction of a paisa; a demo session is negligible. There is no monthly minimum,
-and if the key is absent or the API call fails, the panel silently falls back to
-the rule-based responder — the platform never breaks or blocks on it. Leave the key
-unset to keep the project strictly zero-cost.
+**Cost.** This is the one component with no free tier, and it is still close to
+free at this scale:
+
+| What | Model | Cost |
+|---|---|---|
+| Full index build (~13,200 chunks / ~1.2M tokens) | `text-embedding-3-small` | **~$0.024, one-time** |
+| Incremental rebuild after a seed | same | fractions of a cent — unchanged chunks are never re-embedded |
+| One question (~6–10k context tokens) | `gpt-4.1-mini` | **~$0.002** |
+| A 20-question demo session | | **under 5 cents** |
+
+There is no monthly minimum. If the key is absent, out of credit, or the API
+call fails, the panel falls back to the rule-based responder with a note
+explaining why — the platform never breaks or blocks on it. Leave the key unset
+to keep the project strictly zero-cost.
+
+**Index size:** ~13,200 vectors at 256 dimensions ≈ **14 MB** in MongoDB, well
+inside an Atlas M0's 512 MB. Set `RAG_INDEX_RECORDS=false` for a ~650-chunk
+index (themes and policy only, no per-record retrieval) if space is tight.
+
+**Never commit the key.** `.env` is git-ignored; on Render paste it into the
+dashboard (`sync: false` in `render.yaml`). If a key is ever pasted into a
+chat, a ticket, or a screenshot, rotate it — treat exposure as compromise.
+
+### Anthropic fallback (`ANTHROPIC_API_KEY`, optional)
+
+Used only when `OPENAI_API_KEY` is empty, so the demo survives one provider
+running out of credit. Get a key at <https://console.anthropic.com>; set
+`ANTHROPIC_MODEL` to override the default. Anthropic serves no embeddings
+endpoint here, so this path answers from the structured and live lanes only —
+semantic search stays off until an OpenAI key is present.
 
 ## 6. Admin API guard (`ADMIN_API_KEY`)
 
